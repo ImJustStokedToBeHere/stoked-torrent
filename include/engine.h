@@ -11,7 +11,7 @@ namespace stoked {
 
     };
 
-    class bt_engine  {
+    struct bt_engine  {
     public:
         static bt_engine_settings default_engine_settings() {
             return {};

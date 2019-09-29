@@ -36,7 +36,6 @@ int main(int argc, char* argv[])
         0
     };
 
-
     auto sess = stoked::session{settings};
     sess.init_trackers();
     sess.gather_peers();

@@ -190,6 +190,7 @@
     <ClInclude Include="..\include\engine.h" />
     <ClInclude Include="..\include\os_includes.h" />
     <ClInclude Include="..\include\peer.h" />
+    <ClInclude Include="..\include\peer_manager.h" />
     <ClInclude Include="..\include\session.h" />
     <ClInclude Include="..\include\sha1.h" />
     <ClInclude Include="..\include\stoked_torrent.h" />

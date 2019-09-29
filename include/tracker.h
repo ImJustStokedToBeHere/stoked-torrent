@@ -66,8 +66,7 @@ namespace stoked {
         error_result error;
     };
 
-    class tracker {
-    public:
+    struct tracker {   
         static std::shared_ptr<tracker> create_tracker(const std::string& tracker_url);
 
         tracker(tracker_type type, std::string url_str, const uri& url)
@@ -155,7 +154,7 @@ namespace stoked {
         error_result _last_error;
     };
 
-    class null_tracker : public tracker {
+    struct null_tracker : public tracker {
     public:
         virtual scrape_result scrape(session* sess) override;
         virtual announce_result announce(session* sess, announce_event action) override;

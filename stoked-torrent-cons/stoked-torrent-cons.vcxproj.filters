@@ -92,5 +92,8 @@
     <ClInclude Include="..\include\stoked_torrent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\peer_manager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

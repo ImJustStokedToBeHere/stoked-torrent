@@ -6,7 +6,7 @@
 namespace stoked {
 
     namespace {
-        std::regex expr("(http|https|udp)://([^/ :]+):?([^/ ]*)(/?[^ #?]*)\\x3f?([^ #]*)#?([^ ]*)");
+        inline static const std::regex expr("(http|https|udp)://([^/ :]+):?([^/ ]*)(/?[^ #?]*)\\x3f?([^ #]*)#?([^ ]*)", std::regex::optimize);
     }
 
     struct uri {

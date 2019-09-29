@@ -28,20 +28,19 @@ namespace stoked {
     };
 
     struct session /*: public std::enable_shared_from_this<session>*/ {
-        enum class status : char {
-            unknown,
-            running,
-            paused,
+        enum class state : char {            
+            running,                        
             errored
         };
 
-        enum class state : char {
+        enum class status : char {
             unknown,
+            idle,
             init,
             starting_trackers,
             gathering_peers,
             downloading,
-            seeding
+            seeding            
         };
 
         // JOHNS GOOGLE NUMBER: 5088590502    
@@ -87,8 +86,7 @@ namespace stoked {
         }
 
         bool init_trackers() {
-            _state = state::starting_trackers;
-
+            _status = status::starting_trackers;            
             std::set<std::string> url_list{};
 
             for (const auto& url : _meta->announce_list()) {
@@ -99,10 +97,12 @@ namespace stoked {
                 }
             }
 
+            _status = status::idle;
             return true;
         }
 
         bool gather_peers() {
+            _status = status::gathering_peers;
 
             std::vector<std::pair<std::weak_ptr<tracker>, scrape_result>> scrapes;
 
@@ -136,9 +136,11 @@ namespace stoked {
                     continue;
                 }
 
-                announce_result ret = trkr->announce(this, announce_started);                
+                announce_result ret = trkr->announce(this, announce_started);
+                _peer_mgr.insert(ret.peers.get());
             }
 
+            _status = status::idle;
             return true;
 
         }
@@ -206,10 +208,12 @@ namespace stoked {
         session_settings _settings;
         std::array<char, 20> _peer_id;
         std::map<std::string, std::shared_ptr<tracker>> _tracker_map;
+        // std::set<peer_endpoint> _peer_endpoints;
+        peer_manager _peer_mgr;
 
         std::shared_ptr<torrent> _meta{nullptr};
-        state _state{state::unknown};
         status _status{status::unknown};
+        state _state{state::running};
 
     };
 

@@ -3,7 +3,7 @@
 
 namespace stoked {
     namespace {
-        class tracker_msg {
+        struct tracker_msg {
         public:
             int32_t action{};
             int32_t transact_id{};
@@ -23,7 +23,7 @@ namespace stoked {
             virtual size_t response_length() const = 0;
         };
 
-        class connect_input : public tracker_msg {
+        struct connect_input : public tracker_msg {
         public:
             int64_t connect_id{};
 
@@ -62,7 +62,7 @@ namespace stoked {
             // mutable std::stringstream _ss {};
         };
 
-        class connect_output : public tracker_msg {
+        struct connect_output : public tracker_msg {
         public:
             int64_t connect_id{};
 
@@ -98,7 +98,7 @@ namespace stoked {
             }
         };
 
-        class scrape_input : public tracker_msg {
+        struct scrape_input : public tracker_msg {
         public:
             int64_t connect_id{};
             std::array<char, 20> info_hash_bytes{};
@@ -140,7 +140,7 @@ namespace stoked {
 
         };
 
-        class scrape_output : public tracker_msg {
+        struct scrape_output : public tracker_msg {
         public:
             int64_t connect_id{};
             int32_t seeds{};
@@ -186,7 +186,7 @@ namespace stoked {
             }
         };
 
-        class announce_input : public tracker_msg {
+        struct announce_input : public tracker_msg {
         public:
             int64_t connect_id{};
             std::array<char, 20> info_hash_bytes{};
@@ -288,8 +288,7 @@ namespace stoked {
 
         };
 
-        class announce_output : public tracker_msg {
-        public:
+        struct announce_output : public tracker_msg {        
             int32_t interval{};
             int32_t leechers{};
             int32_t seeders{};
@@ -348,8 +347,6 @@ namespace stoked {
                     memcpy(&(port), bytes + idx + 4, 2);
                     p.port = ntohs(port);
 
-
-
                     OutputDebugString(utils::make_str("peer ip: ", utils::ip_str(ip_addr), ":", p.port, "\n").c_str());
                 }
             }
@@ -363,8 +360,7 @@ namespace stoked {
             }
         };
 
-        class err_output : public tracker_msg {
-        public:
+        struct err_output : public tracker_msg {        
             std::string msg{};
             std::string server_url{};
 
@@ -396,13 +392,13 @@ namespace stoked {
         };
 
         std::shared_ptr<tracker_msg> send_request(const tracker_msg& msg, SOCKET client_socket, const SOCKADDR_IN* server_addr) {
-            static const size_t RESULT_SIZE = 65535 / 2 / 2;
+            static const size_t RECV_BUFFER_SIZE = 65535 / 2 / 2;
             try {
                 std::unique_ptr<char[]> data = std::unique_ptr<char[]>(new char[msg.call_length()]);
                 msg.host_to_network_bytes(data.get());
                 if (auto sent_bytes = sendto(client_socket, data.get(), msg.call_length(), 0, (const SOCKADDR*)server_addr, udp_tracker::ADDR_LEN); sent_bytes == msg.call_length()) { // do some socket send here with a timeout					
-                    char result[RESULT_SIZE];
-                    ZeroMemory(result, RESULT_SIZE);
+                    char result[RECV_BUFFER_SIZE];
+                    ZeroMemory(result, RECV_BUFFER_SIZE);
                     SOCKADDR addr{*((const SOCKADDR*)server_addr)};
                     int len{sizeof(SOCKADDR_IN)};
 
@@ -417,7 +413,7 @@ namespace stoked {
 
                     if (auto select_val = select(-1, &read_set, &write_set, NULL, &timeout); select_val != SOCKET_ERROR) {
                         if (select_val == 1 && FD_ISSET(client_socket, &read_set)) {
-                            if (auto recv_bytes = recvfrom(client_socket, result, RESULT_SIZE, 0, &addr, &len); recv_bytes >= static_cast<int>(msg.response_length())) { // do some socket recv with a timeout here
+                            if (auto recv_bytes = recvfrom(client_socket, result, RECV_BUFFER_SIZE, 0, &addr, &len); recv_bytes >= static_cast<int>(msg.response_length())) { // do some socket recv with a timeout here
 
                                 std::shared_ptr<tracker_msg> output{nullptr};
 
@@ -443,7 +439,13 @@ namespace stoked {
 
                                 // std::string s {result};
                                 // std::reverse(s.begin(), s.end());
-                                result[recv_bytes] = '\0';
+                                if (recv_bytes != RECV_BUFFER_SIZE) {
+                                    // only if we haven't maxed out our buffer then 
+                                    // we need to write a null to terminate our data
+                                    // becuase we use it like a string
+                                    result[recv_bytes] = '\0';
+                                }
+                                
                                 output->network_to_host_bytes(result, recv_bytes);
 
                                 if (output->transact_id == msg.transact_id) {

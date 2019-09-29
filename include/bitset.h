@@ -12,8 +12,7 @@
 #include <optional>
 
 namespace stoked {
-    class bitset {
-    public:
+    struct bitset {    
         bitset() { }
         bitset(const bitset& other) = default;
         bitset(bitset&& other) = default;

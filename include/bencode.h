@@ -30,7 +30,7 @@ namespace stoked {
         errored
     };
 
-    class bencode_element {
+    struct bencode_element {
     public:
         constexpr bencode_element()
             : _type{bencode_element_type::unknown} {
@@ -61,7 +61,7 @@ namespace stoked {
         bencode_element_type _type;
     };
 
-    class bencode_string : public bencode_element {
+    struct bencode_string : public bencode_element {
     public:
         bencode_string()
             : bencode_string("") {
@@ -119,7 +119,7 @@ namespace stoked {
         std::string _val;
     };
 
-    class bencode_integer : public bencode_element {
+    struct bencode_integer : public bencode_element {
     public:
         bencode_integer()
             : bencode_integer(0) {
@@ -170,7 +170,7 @@ namespace stoked {
         intptr_t _val;
     };
 
-    class bencode_list : public bencode_element {
+    struct bencode_list : public bencode_element {
     public:
         bencode_list()
             : bencode_element(bencode_element_type::list),
@@ -245,7 +245,7 @@ namespace stoked {
         std::vector<std::shared_ptr<bencode_element>> _val;
     };
 
-    class bencode_dictionary : public bencode_element {
+    struct bencode_dictionary : public bencode_element {
     public:
         bencode_dictionary()
             : bencode_element(bencode_element_type::dictionary),
@@ -304,7 +304,7 @@ namespace stoked {
         std::map<std::string, std::shared_ptr<bencode_element>> _val;
     };
 
-    class bencode_doc {
+    struct bencode_doc {
     public:
         static bencode_parse_state parse_content(const std::string& content, std::vector<std::shared_ptr<bencode_element>>& elements, std::string& err_msg) {
             err_msg.clear();

@@ -6,7 +6,7 @@
 
 namespace stoked {
 
-    class udp_tracker : public tracker {
+    struct udp_tracker : public tracker {
     public:
         static constexpr int64_t INITIAL_CONNECTION_ID = 0x41727101980;
         static constexpr int32_t CONNECT_ACTION = 0x00;
