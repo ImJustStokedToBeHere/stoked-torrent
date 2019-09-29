@@ -38,8 +38,6 @@ namespace stoked::btp {
         return _err_messages[err_code];
     }
 
-
-
     int teardown_stoked_torrent() {
 #if defined(_MSC_VER) || defined(WIN_VER)
         WSACleanup();

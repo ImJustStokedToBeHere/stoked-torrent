@@ -217,41 +217,53 @@ namespace stoked::btp::utils {
 
     std::string sha1::final() {
         /* Total number of hashed bits */
-        uint64_t total_bits = (transforms * BLOCK_BYTES + buffer.size()) * 8;
+        if (_result_str.empty())
+        {
+            uint64_t total_bits = (transforms * BLOCK_BYTES + buffer.size()) * 8;
 
-        /* Padding */
-        buffer += (char)0x80;
-        size_t orig_size = buffer.size();
-        while (buffer.size() < BLOCK_BYTES) {
-            buffer += (char)0x00;
-        }
-
-        uint32_t block[BLOCK_INTS];
-        buffer_to_block(buffer, block);
-
-        if (orig_size > BLOCK_BYTES - 8) {
-            transform(digest, block, transforms);
-            for (size_t i = 0; i < BLOCK_INTS - 2; i++) {
-                block[i] = 0;
+            /* Padding */
+            buffer += (char)0x80;
+            size_t orig_size = buffer.size();
+            while (buffer.size() < BLOCK_BYTES)
+            {
+                buffer += (char)0x00;
             }
-        }
 
-        /* Append total_bits, split this uint64_t into two uint32_t */
-        block[BLOCK_INTS - 1] = (uint32_t)total_bits;
-        block[BLOCK_INTS - 2] = (uint32_t)(total_bits >> 32);
-        transform(digest, block, transforms);
+            uint32_t block[BLOCK_INTS];
+            buffer_to_block(buffer, block);
 
-        /* Hex std::string */
-        std::ostringstream result;
-        for (size_t i = 0; i < sizeof(digest) / sizeof(digest[0]); i++) {
-            result << std::hex << std::setfill('0') << std::setw(8);
-            result << digest[i];
-        }
+            if (orig_size > BLOCK_BYTES - 8)
+            {
+                transform(digest, block, transforms);
+                for (size_t i = 0; i < BLOCK_INTS - 2; i++)
+                {
+                    block[i] = 0;
+                }
+            }
 
-        /* Reset for next run */
+            /* Append total_bits, split this uint64_t into two uint32_t */
+            block[BLOCK_INTS - 1] = (uint32_t)total_bits;
+            block[BLOCK_INTS - 2] = (uint32_t)(total_bits >> 32);
+            transform(digest, block, transforms);
+
+            /* Hex std::string */            
+            std::ostringstream result;
+            for (size_t i = 0; i < sizeof(digest) / sizeof(digest[0]); i++)
+            {
+                result << std::hex << std::setfill('0') << std::setw(8);
+                result << digest[i];
+            }
+            /* Reset for next run */
         // reset(digest, buffer, transforms);
+            _result_str = result.str();
+        }
+        
+        return _result_str;
+    }
 
-        return result.str();
+    void sha1::set_final(std::string final)
+    {
+        _result_str = std::move(final);
     }
 
     void sha1::reset_digest() {

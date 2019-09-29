@@ -3,9 +3,42 @@
 #include <stoked/btp/stoked_torrent.h>
 #include <stoked/btp/torrent.h>
 #include <stoked/btp/session.h>
+
 #include <iostream>
 #include <string>
 #include <vector>
+
+
+#ifdef UNICODE
+int wmain(int argc, wchar_t* argv[])
+#else
+int main(int argc, char* argv[])
+#endif
+{  
+    using namespace stoked::btp;
+    int res = stoked::btp::setup_stoked_torrent();
+    std::vector<std::string> params{argv, argv + argc - 1};
+    stoked::btp::session_settings settings{
+        params[1],
+        params[2],
+        params[3] == "true" || params[3] == "1" ? true : false,
+        0,
+        false,
+        false,
+        0,
+        0
+    };
+ 
+    auto sess = stoked::btp::session{settings};
+    sess.init_trackers();
+    sess.gather_peers();
+    sess.start();
+
+    std::string in;
+    std::getline(std::cin, in);
+    stoked::btp::teardown_stoked_torrent();
+}
+
 
 
 #ifdef UNICODE
@@ -22,6 +55,7 @@ int main(int argc, char* argv[])
     }
     std::cout << TEXT("===========================================") << std::endl << std::endl;
 */
+    using namespace stoked::btp;
     int res = stoked::btp::setup_stoked_torrent();
     std::vector<std::string> params{argv, argv + argc - 1};
     stoked::btp::session_settings settings{
@@ -34,6 +68,24 @@ int main(int argc, char* argv[])
         0,
         0
     };
+    //auto t1 = torrent::load_torrent_file(settings.torrent_filename);
+    //auto t2 = torrent::load_torrent_file2(settings.torrent_filename);
+
+    //if (t1->info_hash_bytes_hex_a() == t2->info_hash_val().hex() && t1->info_hash_bytes() == t2->info_hash_val().bytes_vec())
+    //{
+    //    std::cout << "it worked !!" << std::endl;
+    //}
+    //else
+    //{
+    //    std::cout << "t1->info_hash_bytes_hex_a(): " << t1->info_hash_bytes_hex_a() << std::endl;
+    //    std::cout << "t2->info_hash_val().hex(): " << t2->info_hash_val().hex() << std::endl;
+    //    std::cout << "t1->info_hash_bytes(): " << std::string(t1->info_hash_bytes().begin(), t1->info_hash_bytes().end()) << std::endl;
+    //    auto bytes = t2->info_hash_val().bytes_vec();
+    //    std::cout << "t2->info_hash_val().bytes_vec(): " << std::string(bytes.begin(), bytes.end()) << std::endl;
+
+
+
+    //}
 
     auto sess = stoked::btp::session{settings};
     sess.init_trackers();

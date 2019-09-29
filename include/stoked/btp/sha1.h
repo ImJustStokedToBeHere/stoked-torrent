@@ -13,20 +13,17 @@ namespace stoked::btp::utils {
         std::string final();
         void reset_digest();
 
-        void raw(uint32_t* raw) {
-            raw[0] = digest[0];
-            raw[1] = digest[1];
-            raw[2] = digest[2];
-            raw[3] = digest[3];
-            raw[4] = digest[4];
+        const uint32_t* const raw_digest() const {
+            return digest;
         }
 
         static std::string from_file(const std::string& filename);
         static std::string from_file(const std::wstring& filename);
         static std::string from_str(const std::string& msg_str);
         static std::string from_str(const std::wstring& msg_str);
-
+        void set_final(std::string final);
     private:
+        std::string _result_str{};
         uint32_t digest[5];
         std::string buffer;
         uint64_t transforms;

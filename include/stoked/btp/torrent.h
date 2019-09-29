@@ -5,9 +5,11 @@
 #include <vector>
 #include <memory>
 #include <gsl/gsl>
-namespace stoked::btp {
+namespace stoked::btp
+{
 
-    struct torrent_file {
+    struct torrent_file
+    {
     public:
         torrent_file(std::vector<std::string> path, size_t length)
             : path{std::move(path)},
@@ -25,20 +27,44 @@ namespace stoked::btp {
         const size_t length;
     };
 
-    struct torrent {
+    struct torrent
+    {
     public:
         // int v = sizeof(torrent_file);
         static std::shared_ptr<torrent> load_torrent_file(const std::string& filename);
+        static std::shared_ptr<torrent> load_torrent_file2(const std::string& filename);
 
-        torrent() : torrent({}, {}, {}, {}, 0, {}, {}, 0, {}, true, {}, {}) {
-        }
+
+        torrent() : torrent({}, {}, {}, {}, 0, {}, {}, 0, {}, true, {})
+        { }
+
+        //torrent(std::string filename, std::string name,
+        //        std::vector<torrent_file> torrent_files,
+        //        std::string pieces, size_t piece_len,
+        //        std::string comment, std::string created_by,
+        //        size_t creation_date, std::vector<std::string> announce_list,
+        //        bool single_file, std::string info_hash, std::vector<char> info_hash_bytes)
+        //    : _filename{std::move(filename)},
+        //    _name{std::move(name)},
+        //    _files{std::move(torrent_files)},
+        //    _pieces{std::move(pieces)},
+        //    _piece_len{piece_len},
+        //    _comment{std::move(comment)},
+        //    _created_by{std::move(created_by)},
+        //    _creation_date{creation_date},
+        //    _announce_list{std::move(announce_list)},
+        //    _single_file{single_file},
+        //    _info_hash{info_hash},
+        //    _info_hash_bytes{info_hash_bytes} {
+        //    /*noop*/
+        //}
 
         torrent(std::string filename, std::string name,
                 std::vector<torrent_file> torrent_files,
                 std::string pieces, size_t piece_len,
                 std::string comment, std::string created_by,
                 size_t creation_date, std::vector<std::string> announce_list,
-                bool single_file, std::string info_hash, std::vector<char> info_hash_bytes)
+                bool single_file, info_hash hash)
             : _filename{std::move(filename)},
             _name{std::move(name)},
             _files{std::move(torrent_files)},
@@ -49,75 +75,90 @@ namespace stoked::btp {
             _creation_date{creation_date},
             _announce_list{std::move(announce_list)},
             _single_file{single_file},
-            _info_hash{info_hash},
-            _info_hash_bytes{info_hash_bytes} {
+            _info_hash{std::move(hash)} {
             /*noop*/
         }
 
         torrent(const torrent&) = delete;
         torrent(torrent&&) = default;
 
-        std::string filename() const {
+        std::string filename() const
+        {
             return _filename;
         }
 
-        std::string name() const {
+        std::string name() const
+        {
             return _name;
         }
 
-        std::string pieces() const {
+        std::string pieces() const
+        {
             return _pieces;
         }
 
-        std::string comment() const {
+        std::string comment() const
+        {
             return _comment;
         }
 
-        std::string created_by() const {
+        std::string created_by() const
+        {
             return _created_by;
         }
 
-        size_t piece_len() const {
+        size_t piece_len() const
+        {
             return _piece_len;
         }
 
-        size_t creation_date() const {
+        size_t creation_date() const
+        {
             return _creation_date;
         }
 
-        bool is_single_file() const {
+        bool is_single_file() const
+        {
             return _single_file;
         }
 
 
-#ifdef UNICODE
-#define info_hash_bytes_hex info_hash_bytes_hex_w
-#else
-#define info_hash_bytes_hex info_hash_bytes_hex_a
-#endif
+        //#ifdef UNICODE
+        //#define info_hash_bytes_hex info_hash_bytes_hex_w
+        //#else
+        //#define info_hash_bytes_hex info_hash_bytes_hex_a
+        //#endif
+        //
+        //        const std::string& info_hash_bytes_hex_a() const {
+        //            return _info_hash;
+        //        }
+        //
+        //        std::wstring info_hash_bytes_hex_w() const {
+        //            return stoked::btp::utils::str_to_wstr(info_hash_bytes_hex_a());
+        //        }
+        //
+        //        const std::vector<char>& info_hash_bytes() const {
+        //            return _info_hash_bytes;
+        //        }
 
-        const std::string& info_hash_bytes_hex_a() const {
-            return _info_hash;
-        }
-
-        std::wstring info_hash_bytes_hex_w() const {
-            return stoked::btp::utils::str_to_wstr(info_hash_bytes_hex_a());
-        }
-
-        const std::vector<char>& info_hash_bytes() const {
-            return _info_hash_bytes;
-        }
-
-        const std::vector<std::string>& announce_list() const {
+        const std::vector<std::string>& announce_list() const
+        {
             return _announce_list;
         }
 
-        const std::vector<torrent_file>& torrent_files() const {
+        const std::vector<torrent_file>& torrent_files() const
+        {
             return _files;
         }
 
-        size_t byte_len() const {
+        size_t byte_len() const
+        {
 
+        }
+
+        const info_hash& info_hash_val() const
+        {
+            return _info_hash;
         }
 
 
@@ -133,9 +174,9 @@ namespace stoked::btp {
         uintptr_t _creation_date;
         std::vector<std::string> _announce_list;
         bool _single_file;
-        std::string _info_hash;
-        std::vector<char> _info_hash_bytes;
-        // info_hash _info_hash
+        // std::string _info_hash;
+        // std::vector<char> _info_hash_bytes;
+        info_hash _info_hash;
     };
 
 }

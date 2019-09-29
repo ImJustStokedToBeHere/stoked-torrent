@@ -138,7 +138,7 @@ namespace stoked::btp {
                 }
 
                 announce_result ret = trkr->announce(this, announce_started);
-                _peer_mgr.insert(ret.peers.get());
+                // _peer_mgr.insert(*.peers);
             }
 
             _status = status::idle;
@@ -147,10 +147,15 @@ namespace stoked::btp {
         }
 
 
-        std::array<char, 20> info_hash_bytes() const {
+        /*std::array<char, 20> info_hash_bytes() const {
             std::array<char, 20> ret;
             std::copy_n(_meta->info_hash_bytes().begin(), 20, ret.begin());
             return ret;
+        }*/
+
+        std::array<char, 20> info_hash_bytes() const
+        {
+            return _meta->info_hash_val().bytes();
         }
 
         std::array<char, 20> get_peer_id() {
