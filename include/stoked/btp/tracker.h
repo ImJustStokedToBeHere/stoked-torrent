@@ -1,12 +1,12 @@
 #pragma once
-#include <utils.h>
-#include <peer.h>
-#include <uri.h>
+#include <stoked/btp/utils.h>
+#include <stoked/btp/peer.h>
+#include <stoked/btp/uri.h>
 #include <memory>
 #include <stdint.h>
 #include <limits>
 
-namespace stoked {
+namespace stoked::btp {
     struct session;
 
     enum announce_event : int32_t {

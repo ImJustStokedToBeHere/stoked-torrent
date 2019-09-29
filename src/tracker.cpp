@@ -1,7 +1,7 @@
-#include <tracker.h>
-#include <udp_tracker.h>
+#include <stoked/btp/tracker.h>
+#include <stoked/btp/udp_tracker.h>
 
-namespace stoked {
+namespace stoked::btp {
 
     std::shared_ptr<tracker> tracker::create_tracker(const std::string& tracker_url) {
         tracker_type type;

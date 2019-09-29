@@ -1,10 +1,11 @@
 #pragma once
-#include <utils.h>
+#include <stoked/btp/info_hash.h>
+#include <stoked/btp/utils.h>
 #include <string>
 #include <vector>
 #include <memory>
-
-namespace stoked {
+#include <gsl/gsl>
+namespace stoked::btp {
 
     struct torrent_file {
     public:
@@ -100,7 +101,7 @@ namespace stoked {
         }
 
         std::wstring info_hash_bytes_hex_w() const {
-            return stoked::utils::str_to_wstr(info_hash_bytes_hex_a());
+            return stoked::btp::utils::str_to_wstr(info_hash_bytes_hex_a());
         }
 
         const std::vector<char>& info_hash_bytes() const {
@@ -134,6 +135,7 @@ namespace stoked {
         bool _single_file;
         std::string _info_hash;
         std::vector<char> _info_hash_bytes;
+        // info_hash _info_hash
     };
 
 }

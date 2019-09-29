@@ -1,9 +1,9 @@
-#include <stoked_torrent.h>
-#include <os_includes.h>
-#include <utils.h>
+#include <stoked/btp/stoked_torrent.h>
+#include <stoked/btp/os_includes.h>
+#include <stoked/btp/utils.h>
 #include <map>
 
-namespace stoked {
+namespace stoked::btp {
 
     namespace {
 
@@ -27,7 +27,7 @@ namespace stoked {
         if (auto wsa_ret = WSAStartup(MAKEWORD(2, 2), &wsa); wsa_ret != 0) {
             return _storrent_state = STORRENT_ERR_WSA_FAILED;
         }
-        OutputDebugString(stoked::utils::make_str("stoked torrent started!\n").c_str());
+        OutputDebugString(stoked::btp::utils::make_str("stoked torrent started!\n").c_str());
 #else
 #endif
 
@@ -43,7 +43,7 @@ namespace stoked {
     int teardown_stoked_torrent() {
 #if defined(_MSC_VER) || defined(WIN_VER)
         WSACleanup();
-        OutputDebugString(stoked::utils::make_str("stoked torrent shutdown!\n").c_str());
+        OutputDebugString(stoked::btp::utils::make_str("stoked torrent shutdown!\n").c_str());
 #else
 #endif
         return STORRENT_UNINITIALIZED;

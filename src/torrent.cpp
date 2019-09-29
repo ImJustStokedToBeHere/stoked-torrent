@@ -1,8 +1,8 @@
-#include <torrent.h>
-#include <bencode.h>
-#include <sha1.h>
+#include <stoked/btp/torrent.h>
+#include <stoked/btp/bencode.h>
+#include <stoked/btp/sha1.h>
 
-namespace stoked {
+namespace stoked::btp {
 
     std::shared_ptr<torrent> torrent::load_torrent_file(const std::string& filename) {
         auto bencode_doc = bencode_doc::parse_doc(filename);

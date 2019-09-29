@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 
-namespace stoked {
+namespace stoked::btp {
 
     inline const int STORRENT_UNINITIALIZED = 0;
     inline const int STORRENT_INITIALIZED = 1;

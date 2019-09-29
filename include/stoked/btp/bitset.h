@@ -1,7 +1,6 @@
 #pragma once
-#include <utils.h>
+#include <stoked/btp/utils.h>
 #include <gsl/span>
-
 #include <memory>
 #include <stdexcept>
 #include <utility>
@@ -11,7 +10,7 @@
 #include <sstream>
 #include <optional>
 
-namespace stoked {
+namespace stoked::btp {
     struct bitset {    
         bitset() { }
         bitset(const bitset& other) = default;

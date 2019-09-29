@@ -3,7 +3,7 @@
 #include <regex>
 #include <optional>
 
-namespace stoked {
+namespace stoked::btp {
 
     namespace {
         inline static const std::regex expr("(http|https|udp)://([^/ :]+):?([^/ ]*)(/?[^ #?]*)\\x3f?([^ #]*)#?([^ ]*)", std::regex::optimize);

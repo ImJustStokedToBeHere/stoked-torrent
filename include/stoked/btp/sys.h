@@ -5,7 +5,7 @@
 #include <Windows.h>
 #include <Psapi.h>
 
-namespace stoked::utils {
+namespace stoked::btp::utils {
     struct drive_list {
         int count{0};
         std::string volumes[26];

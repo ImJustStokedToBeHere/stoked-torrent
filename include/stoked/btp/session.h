@@ -1,11 +1,12 @@
 #pragma once
-#include <engine.h>
-#include <torrent.h>
-#include <peer.h>
-#include <tracker.h>
-#include <udp_tracker.h>
-#include <bitset.h>
-#include <sys.h>
+#include <stoked/btp/engine.h>
+#include <stoked/btp/torrent.h>
+#include <stoked/btp/peer.h>
+#include <stoked/btp/peer_manager.h>
+#include <stoked/btp/tracker.h>
+#include <stoked/btp/udp_tracker.h>
+#include <stoked/btp/bitset.h>
+#include <stoked/btp/sys.h>
 #include <string_view>
 #include <vector>
 #include <memory>
@@ -13,7 +14,7 @@
 #include <iostream>
 #include <set>
 
-namespace stoked {
+namespace stoked::btp {
     class tracker;
 
     struct session_settings {

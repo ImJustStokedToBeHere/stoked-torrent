@@ -1,10 +1,10 @@
-#include <udp_tracker.h>
-#include <session.h>
-#include <peer.h>
-#include <udp_tracker_impl.h>
+#include <stoked/btp/udp_tracker.h>
+#include <stoked/btp/session.h>
+#include <stoked/btp/peer.h>
+#include <stoked/btp/udp_tracker_impl.h>
 
 
-namespace stoked {
+namespace stoked::btp {
 
     const std::map<const int32_t, const char*> udp_tracker::action_strings{
         {CONNECT_ACTION, "connect"},

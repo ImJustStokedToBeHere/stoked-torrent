@@ -1,4 +1,4 @@
-#include "sys.h"
+#include <stoked/btp/sys.h>
 #include <random>
 #include <Psapi.h>
 #include <Windows.h>
@@ -11,7 +11,7 @@
 #define INFO_SELECTOR_A TEXT("StringFileInfo\\040904E4\\")
 #define INFO_SELECTOR_W TEXT("StringFileInfo\\040904B0\\")
 
-namespace stoked::utils {
+namespace stoked::btp::utils {
 
     std::string module_info::get_file_name_from_module(HMODULE aModuleHandle) {
         //char* filename = NULL;

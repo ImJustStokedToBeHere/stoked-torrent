@@ -1,9 +1,9 @@
 #pragma once
-#include <utils.h>
+#include <stoked/btp/utils.h>
 #include <set>
 #include <cstdint>
 
-namespace stoked {
+namespace stoked::btp {
     struct peer_endpoint {
         uint32_t addr_bytes;// [4] {0,0,0,0};
         uint16_t port;

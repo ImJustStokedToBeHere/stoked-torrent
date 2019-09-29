@@ -1,9 +1,8 @@
-
-#include <utils.h>
-#include <sys.h>
-#include <stoked_torrent.h>
-#include <torrent.h>
-#include <session.h>
+#include <stoked/btp/utils.h>
+#include <stoked/btp/sys.h>
+#include <stoked/btp/stoked_torrent.h>
+#include <stoked/btp/torrent.h>
+#include <stoked/btp/session.h>
 #include <iostream>
 #include <string>
 #include <vector>
@@ -23,9 +22,9 @@ int main(int argc, char* argv[])
     }
     std::cout << TEXT("===========================================") << std::endl << std::endl;
 */
-    int res = stoked::setup_stoked_torrent();
+    int res = stoked::btp::setup_stoked_torrent();
     std::vector<std::string> params{argv, argv + argc - 1};
-    stoked::session_settings settings{
+    stoked::btp::session_settings settings{
         params[1],
         params[2],
         params[3] == "true" || params[3] == "1" ? true : false,
@@ -36,7 +35,7 @@ int main(int argc, char* argv[])
         0
     };
 
-    auto sess = stoked::session{settings};
+    auto sess = stoked::btp::session{settings};
     sess.init_trackers();
     sess.gather_peers();
     // sess.start();
@@ -46,7 +45,7 @@ int main(int argc, char* argv[])
 
     std::string in;
     std::getline(std::cin, in);
-    stoked::teardown_stoked_torrent();
+    stoked::btp::teardown_stoked_torrent();
 }
 
 

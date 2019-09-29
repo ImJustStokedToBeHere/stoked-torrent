@@ -185,22 +185,23 @@
     <ClCompile Include="stoked-torrent-cons.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\include\bencode.h" />
-    <ClInclude Include="..\include\bitset.h" />
-    <ClInclude Include="..\include\engine.h" />
-    <ClInclude Include="..\include\os_includes.h" />
-    <ClInclude Include="..\include\peer.h" />
-    <ClInclude Include="..\include\peer_manager.h" />
-    <ClInclude Include="..\include\session.h" />
-    <ClInclude Include="..\include\sha1.h" />
-    <ClInclude Include="..\include\stoked_torrent.h" />
-    <ClInclude Include="..\include\sys.h" />
-    <ClInclude Include="..\include\torrent.h" />
-    <ClInclude Include="..\include\tracker.h" />
-    <ClInclude Include="..\include\udp_tracker.h" />
-    <ClInclude Include="..\include\udp_tracker_impl.h" />
-    <ClInclude Include="..\include\uri.h" />
-    <ClInclude Include="..\include\utils.h" />
+    <ClInclude Include="..\include\stoked\btp\bencode.h" />
+    <ClInclude Include="..\include\stoked\btp\bitset.h" />
+    <ClInclude Include="..\include\stoked\btp\engine.h" />
+    <ClInclude Include="..\include\stoked\btp\info_hash.h" />
+    <ClInclude Include="..\include\stoked\btp\os_includes.h" />
+    <ClInclude Include="..\include\stoked\btp\peer.h" />
+    <ClInclude Include="..\include\stoked\btp\peer_manager.h" />
+    <ClInclude Include="..\include\stoked\btp\session.h" />
+    <ClInclude Include="..\include\stoked\btp\sha1.h" />
+    <ClInclude Include="..\include\stoked\btp\stoked_torrent.h" />
+    <ClInclude Include="..\include\stoked\btp\sys.h" />
+    <ClInclude Include="..\include\stoked\btp\torrent.h" />
+    <ClInclude Include="..\include\stoked\btp\tracker.h" />
+    <ClInclude Include="..\include\stoked\btp\udp_tracker.h" />
+    <ClInclude Include="..\include\stoked\btp\udp_tracker_impl.h" />
+    <ClInclude Include="..\include\stoked\btp\uri.h" />
+    <ClInclude Include="..\include\stoked\btp\utils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

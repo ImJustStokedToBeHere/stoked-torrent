@@ -13,25 +13,10 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Header Files\utils">
-      <UniqueIdentifier>{c1e68f76-6c3f-4563-b2d3-17ea62d754d3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\utils">
-      <UniqueIdentifier>{870cba3f-3027-4e87-853a-548159e13ad5}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stoked-torrent-cons.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\sha1.cpp">
-      <Filter>Source Files\utils</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\sys.cpp">
-      <Filter>Source Files\utils</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\utils.cpp">
-      <Filter>Source Files\utils</Filter>
     </ClCompile>
     <ClCompile Include="..\src\tracker.cpp">
       <Filter>Source Files</Filter>
@@ -45,54 +30,66 @@
     <ClCompile Include="..\src\stoked_torrent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\sha1.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\sys.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\utils.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\include\tracker.h">
+    <ClInclude Include="..\include\stoked\btp\bencode.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\peer.h">
+    <ClInclude Include="..\include\stoked\btp\bitset.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\bencode.h">
+    <ClInclude Include="..\include\stoked\btp\engine.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\uri.h">
+    <ClInclude Include="..\include\stoked\btp\info_hash.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\bitset.h">
+    <ClInclude Include="..\include\stoked\btp\os_includes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\os_includes.h">
-      <Filter>Header Files\utils</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\sha1.h">
-      <Filter>Header Files\utils</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\sys.h">
-      <Filter>Header Files\utils</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\utils.h">
-      <Filter>Header Files\utils</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\udp_tracker.h">
+    <ClInclude Include="..\include\stoked\btp\peer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\udp_tracker_impl.h">
+    <ClInclude Include="..\include\stoked\btp\peer_manager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\engine.h">
+    <ClInclude Include="..\include\stoked\btp\session.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\session.h">
+    <ClInclude Include="..\include\stoked\btp\sha1.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\torrent.h">
+    <ClInclude Include="..\include\stoked\btp\stoked_torrent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\stoked_torrent.h">
+    <ClInclude Include="..\include\stoked\btp\sys.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\peer_manager.h">
+    <ClInclude Include="..\include\stoked\btp\torrent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\stoked\btp\tracker.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\stoked\btp\udp_tracker.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\stoked\btp\udp_tracker_impl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\stoked\btp\uri.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\stoked\btp\utils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

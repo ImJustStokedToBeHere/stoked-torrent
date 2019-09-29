@@ -1,9 +1,9 @@
-#include "sha1.h"
+#include <stoked/btp/sha1.h>
 #include <sstream>
 #include <iomanip>
 #include <fstream>
 
-namespace stoked::utils {
+namespace stoked::btp::utils {
 
     static const size_t BLOCK_INTS = 16;  /* number of 32bit integers per sha1 block */
     static const size_t BLOCK_BYTES = BLOCK_INTS * 4;

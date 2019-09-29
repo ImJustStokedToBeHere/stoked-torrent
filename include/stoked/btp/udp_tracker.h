@@ -1,10 +1,10 @@
 #pragma once
-#include <tracker.h>
+#include <stoked/btp/tracker.h>
 #include <string>
 #include <array>
 #include <map>
 
-namespace stoked {
+namespace stoked::btp {
 
     struct udp_tracker : public tracker {
     public:

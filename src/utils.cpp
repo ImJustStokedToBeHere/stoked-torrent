@@ -1,6 +1,6 @@
-#include "utils.h"
+#include <stoked/btp/utils.h>
 
-namespace stoked::utils {
+namespace stoked::btp::utils {
 
     std::chrono::milliseconds chrono_timestamp() {
         return std::chrono::duration_cast<std::chrono::milliseconds>(

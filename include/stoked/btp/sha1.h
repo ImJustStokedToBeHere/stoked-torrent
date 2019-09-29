@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-namespace stoked::utils {
+namespace stoked::btp::utils {
     class sha1 {
     public:
         sha1();

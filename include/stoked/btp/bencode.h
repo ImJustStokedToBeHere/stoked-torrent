@@ -7,7 +7,7 @@
 #include <vector>
 #include <sstream>
 
-namespace stoked {
+namespace stoked::btp {
     class bencode_empty;
     class bencode_string;
     class bencode_list;

@@ -1,8 +1,8 @@
 #pragma once
-#include <peer.h>
+#include <stoked/btp/peer.h>
 #include <gsl/span>
 
-namespace stoked {
+namespace stoked::btp {
     struct peer_manager {    
         using iterator = std::set<peer_endpoint>::iterator;
         using const_iterator = std::set<peer_endpoint>::const_iterator;

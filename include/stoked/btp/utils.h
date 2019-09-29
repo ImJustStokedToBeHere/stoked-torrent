@@ -1,5 +1,5 @@
 #pragma once
-#include "os_includes.h"
+#include <stoked/btp/os_includes.h>
 #include <cstdint>
 #include <ctime>
 #include <chrono>
@@ -10,7 +10,7 @@
 #include <array>
 
 
-namespace stoked::utils {
+namespace stoked::btp::utils {
     std::chrono::milliseconds chrono_timestamp();
 
 #ifdef UNICODE

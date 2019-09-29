@@ -4,7 +4,7 @@
 #include <memory>
 #include <set>
 
-namespace stoked {
+namespace stoked::btp {
     struct session;
 
     struct bt_engine_settings {
