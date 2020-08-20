@@ -3,7 +3,12 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29318.209
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "stoked-torrent-cons", "stoked-torrent-cons\stoked-torrent-cons.vcxproj", "{997AEA22-67F1-4128-9578-7C10CD14462B}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "storrentlib", "storrentlib\storrentlib.vcxproj", "{833BBC37-E05F-4765-9106-E5FE6D570563}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "storrentc", "storrentc\storrentc.vcxproj", "{1EE7F2EA-B687-4F5E-864D-F4542C296C67}"
+	ProjectSection(ProjectDependencies) = postProject
+		{833BBC37-E05F-4765-9106-E5FE6D570563} = {833BBC37-E05F-4765-9106-E5FE6D570563}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,14 +18,22 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{997AEA22-67F1-4128-9578-7C10CD14462B}.Debug|x64.ActiveCfg = Debug|x64
-		{997AEA22-67F1-4128-9578-7C10CD14462B}.Debug|x64.Build.0 = Debug|x64
-		{997AEA22-67F1-4128-9578-7C10CD14462B}.Debug|x86.ActiveCfg = Debug|Win32
-		{997AEA22-67F1-4128-9578-7C10CD14462B}.Debug|x86.Build.0 = Debug|Win32
-		{997AEA22-67F1-4128-9578-7C10CD14462B}.Release|x64.ActiveCfg = Release|x64
-		{997AEA22-67F1-4128-9578-7C10CD14462B}.Release|x64.Build.0 = Release|x64
-		{997AEA22-67F1-4128-9578-7C10CD14462B}.Release|x86.ActiveCfg = Release|Win32
-		{997AEA22-67F1-4128-9578-7C10CD14462B}.Release|x86.Build.0 = Release|Win32
+		{833BBC37-E05F-4765-9106-E5FE6D570563}.Debug|x64.ActiveCfg = Debug|x64
+		{833BBC37-E05F-4765-9106-E5FE6D570563}.Debug|x64.Build.0 = Debug|x64
+		{833BBC37-E05F-4765-9106-E5FE6D570563}.Debug|x86.ActiveCfg = Debug|Win32
+		{833BBC37-E05F-4765-9106-E5FE6D570563}.Debug|x86.Build.0 = Debug|Win32
+		{833BBC37-E05F-4765-9106-E5FE6D570563}.Release|x64.ActiveCfg = Release|x64
+		{833BBC37-E05F-4765-9106-E5FE6D570563}.Release|x64.Build.0 = Release|x64
+		{833BBC37-E05F-4765-9106-E5FE6D570563}.Release|x86.ActiveCfg = Release|Win32
+		{833BBC37-E05F-4765-9106-E5FE6D570563}.Release|x86.Build.0 = Release|Win32
+		{1EE7F2EA-B687-4F5E-864D-F4542C296C67}.Debug|x64.ActiveCfg = Debug|x64
+		{1EE7F2EA-B687-4F5E-864D-F4542C296C67}.Debug|x64.Build.0 = Debug|x64
+		{1EE7F2EA-B687-4F5E-864D-F4542C296C67}.Debug|x86.ActiveCfg = Debug|Win32
+		{1EE7F2EA-B687-4F5E-864D-F4542C296C67}.Debug|x86.Build.0 = Debug|Win32
+		{1EE7F2EA-B687-4F5E-864D-F4542C296C67}.Release|x64.ActiveCfg = Release|x64
+		{1EE7F2EA-B687-4F5E-864D-F4542C296C67}.Release|x64.Build.0 = Release|x64
+		{1EE7F2EA-B687-4F5E-864D-F4542C296C67}.Release|x86.ActiveCfg = Release|Win32
+		{1EE7F2EA-B687-4F5E-864D-F4542C296C67}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
