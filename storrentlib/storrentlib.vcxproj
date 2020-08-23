@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\engine.cpp" />
+    <ClCompile Include="src\info_hash.cpp" />
     <ClCompile Include="src\sha1.cpp" />
     <ClCompile Include="src\storrentlib.cpp" />
     <ClCompile Include="src\sys_utils.cpp" />
@@ -37,12 +38,14 @@
     <ClInclude Include="include\storrent\piece_block.hpp" />
     <ClInclude Include="include\storrent\piece_queue.hpp" />
     <ClInclude Include="include\storrent\remote_tracker.hpp" />
+    <ClInclude Include="include\storrent\torrent_session.hpp" />
     <ClInclude Include="include\storrent\sha1.hpp" />
     <ClInclude Include="include\storrent\storrentlib.hpp" />
     <ClInclude Include="include\storrent\sys_utils.hpp" />
     <ClInclude Include="include\storrent\torrent.hpp" />
     <ClInclude Include="include\storrent\torrent_file.hpp" />
     <ClInclude Include="include\storrent\tracker_manager.hpp" />
+    <ClInclude Include="include\storrent\uri.hpp" />
     <ClInclude Include="include\storrent\utils.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

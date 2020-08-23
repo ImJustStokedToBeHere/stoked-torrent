@@ -5,6 +5,7 @@
 #include <memory>
 #include <string>
 #include <vector>
+#include <cmath>
 
 namespace storrent
 {
@@ -16,30 +17,8 @@ namespace storrent
     public:
         static constexpr auto BLOCK_LEN = 0x4000;
         static torrent_handle load_torrent_file(const std::string& filename);
-        // static std::shared_ptr<torrent> load_torrent_file2(const std::string& filename);
 
         torrent() : torrent({}, {}, {}, {}, 0, {}, {}, 0, {}, {}, true, {}) {}
-
-        // torrent(std::string filename, std::string name,
-        //        std::vector<torrent_file> torrent_files,
-        //        std::string pieces, size_t piece_len,
-        //        std::string comment, std::string created_by,
-        //        size_t creation_date, std::vector<std::string> announce_list,
-        //        bool single_file, std::string info_hash, std::vector<char> info_hash_bytes)
-        //    : _filename{std::move(filename)},
-        //    _name{std::move(name)},
-        //    _files{std::move(torrent_files)},
-        //    _pieces{std::move(pieces)},
-        //    _piece_len{piece_len},
-        //    _comment{std::move(comment)},
-        //    _created_by{std::move(created_by)},
-        //    _creation_date{creation_date},
-        //    _announce_list{std::move(announce_list)},
-        //    _single_file{single_file},
-        //    _info_hash{info_hash},
-        //    _info_hash_bytes{info_hash_bytes} {
-        //    /*noop*/
-        //}
 
         torrent(std::string filename,
                 std::string name,
@@ -91,7 +70,7 @@ namespace storrent
         size_t blocks_per_pc(size_t pc_idx) const
         {
             const auto pc_len = piece_len(pc_idx);
-            return ceil(pc_len / BLOCK_LEN);
+            return static_cast<size_t>(std::ceil(pc_len / BLOCK_LEN));
         }
 
         size_t piece_len(size_t pc_idx) const
@@ -99,27 +78,10 @@ namespace storrent
             const size_t total = size();
             const size_t pc_len = piece_len();
             const auto last_pc_len = total % pc_len;
-            const size_t last_pc_idx = floor(total / pc_len);
+            const size_t last_pc_idx = static_cast<size_t>(floor(total / pc_len));
             return last_pc_idx == pc_idx ? last_pc_len : pc_len;
         }
 
-        //#ifdef UNICODE
-        //#define info_hash_bytes_hex info_hash_bytes_hex_w
-        //#else
-        //#define info_hash_bytes_hex info_hash_bytes_hex_a
-        //#endif
-        //
-        //        const std::string& info_hash_bytes_hex_a() const {
-        //            return _info_hash;
-        //        }
-        //
-        //        std::wstring info_hash_bytes_hex_w() const {
-        //            return stoked::btp::utils::str_to_wstr(info_hash_bytes_hex_a());
-        //        }
-        //
-        //        const std::vector<char>& info_hash_bytes() const {
-        //            return _info_hash_bytes;
-        //        }
         std::string announce() const { return _announce; }
         const std::vector<std::string>& announce_list() const { return _announce_list; }
 
@@ -138,7 +100,6 @@ namespace storrent
         }
 
     private:
-        // int g = sizeof(std::vector<char>);
         std::string _announce;
         std::string _filename;
         std::string _name;
@@ -150,8 +111,6 @@ namespace storrent
         uintptr_t _creation_date;
         std::vector<std::string> _announce_list;
         bool _single_file;
-        // std::string _info_hash;
-        // std::vector<char> _info_hash_bytes;
         info_hash _info_hash;
     };
 

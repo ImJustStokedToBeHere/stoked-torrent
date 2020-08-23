@@ -23,8 +23,8 @@ namespace storrent::utils
 
     std::wstring str_to_wstr(const std::string& s)
     {
-        size_t slength = s.length() + 1;
-        size_t len = MultiByteToWideChar(CP_ACP, 0, s.c_str(), slength, 0, 0);
+        auto slength = static_cast<int>(s.length() + 1);
+        auto len = MultiByteToWideChar(CP_ACP, 0, s.c_str(), static_cast<int>(slength), 0, 0);
         std::wstring r(len, L'\0');
         MultiByteToWideChar(CP_ACP, 0, s.c_str(), slength, &r[0], len);
         return r;
@@ -32,8 +32,8 @@ namespace storrent::utils
 
     std::string wstr_to_str(const std::wstring& s)
     {
-        size_t slength = s.length() + 1;
-        size_t len = WideCharToMultiByte(CP_ACP, 0, s.c_str(), slength, 0, 0, 0, 0);
+        auto slength = static_cast<int>(s.length() + 1);
+        auto len = WideCharToMultiByte(CP_ACP, 0, s.c_str(), static_cast<int>(slength), 0, 0, 0, 0);
         std::string r(len, '\0');
         WideCharToMultiByte(CP_ACP, 0, s.c_str(), slength, &r[0], len, 0, 0);
         return r;
@@ -105,12 +105,12 @@ namespace storrent::utils
         return std::wstring(currentTime);
     }
 
-    std::string ip_str(in_addr addr)
-    {
-        char ip[16];
-        inet_ntop(AF_INET, &addr, ip, 16);
-        return std::string{ip};
-    }
+    //std::string ip_str(in_addr addr)
+    //{
+    //    char ip[16];
+    //    inet_ntop(AF_INET, &addr, ip, 16);
+    //    return std::string{ip};
+    //}
 
     std::string timestamp_str_a()
     {
@@ -340,78 +340,78 @@ namespace storrent::utils
         return s;
     }
 
-    bool get_ip_from_hostname_w(const std::wstring& hostname,
-                                const std::wstring& port_str,
-                                IPPROTO protocol_designation,
-                                std::wstring& ip,
-                                SOCKADDR_IN& addr)
-    {
+    //bool get_ip_from_hostname_w(const std::wstring& hostname,
+    //                            const std::wstring& port_str,
+    //                            IPPROTO protocol_designation,
+    //                            std::wstring& ip,
+    //                            SOCKADDR_IN& addr)
+    //{
 
-        if (WSAData wsa{}; 0 != WSAStartup(MAKEWORD(2, 2), &wsa))
-        {
-            throw WSAGetLastError();
-        }
+    //    if (WSAData wsa{}; 0 != WSAStartup(MAKEWORD(2, 2), &wsa))
+    //    {
+    //        throw WSAGetLastError();
+    //    }
 
-        ADDRINFOW* result = NULL;
-        ADDRINFOW hints{};
+    //    ADDRINFOW* result = NULL;
+    //    ADDRINFOW hints{};
 
-        ZeroMemory(&hints, sizeof(hints));
-        hints.ai_family = AF_INET;
-        // hints.ai_socktype = SOCK_DGRAM;
-        hints.ai_protocol = protocol_designation;
+    //    ZeroMemory(&hints, sizeof(hints));
+    //    hints.ai_family = AF_INET;
+    //    // hints.ai_socktype = SOCK_DGRAM;
+    //    hints.ai_protocol = protocol_designation;
 
-        DWORD host_type_namespace = NS_ALL;
-        auto ret = GetAddrInfoW(hostname.c_str(), port_str.c_str(), &hints, &result);
-        if (ret)
-        {
-            return false;
-        }
+    //    DWORD host_type_namespace = NS_ALL;
+    //    auto ret = GetAddrInfoW(hostname.c_str(), port_str.c_str(), &hints, &result);
+    //    if (ret)
+    //    {
+    //        return false;
+    //    }
 
-        sockaddr_in ipv4 = *((struct sockaddr_in*)result->ai_addr);
-        wchar_t ipstringbuffer[46];
-        InetNtopW(AF_INET, &ipv4.sin_addr, ipstringbuffer, 46);
+    //    sockaddr_in ipv4 = *((struct sockaddr_in*)result->ai_addr);
+    //    wchar_t ipstringbuffer[46];
+    //    InetNtopW(AF_INET, &ipv4.sin_addr, ipstringbuffer, 46);
 
-        ip = ipstringbuffer;
-        addr = ipv4;
-        WSACleanup();
-        return true;
-    }
+    //    ip = ipstringbuffer;
+    //    addr = ipv4;
+    //    WSACleanup();
+    //    return true;
+    //}
 
-    bool get_ip_from_hostname_a(const std::string& hostname,
-                                const std::string& port_str,
-                                IPPROTO protocol_designation,
-                                std::string& ip,
-                                SOCKADDR_IN& addr)
-    {
-        if (WSAData wsa{}; 0 != WSAStartup(MAKEWORD(2, 2), &wsa))
-        {
-            throw WSAGetLastError();
-        }
+    //bool get_ip_from_hostname_a(const std::string& hostname,
+    //                            const std::string& port_str,
+    //                            IPPROTO protocol_designation,
+    //                            std::string& ip,
+    //                            SOCKADDR_IN& addr)
+    //{
+    //    if (WSAData wsa{}; 0 != WSAStartup(MAKEWORD(2, 2), &wsa))
+    //    {
+    //        throw WSAGetLastError();
+    //    }
 
-        ADDRINFOA* result = NULL;
-        ADDRINFOA hints{};
+    //    ADDRINFOA* result = NULL;
+    //    ADDRINFOA hints{};
 
-        ZeroMemory(&hints, sizeof(hints));
-        hints.ai_family = AF_INET;
-        // hints.ai_socktype = SOCK_DGRAM;
-        hints.ai_protocol = protocol_designation;
+    //    ZeroMemory(&hints, sizeof(hints));
+    //    hints.ai_family = AF_INET;
+    //    // hints.ai_socktype = SOCK_DGRAM;
+    //    hints.ai_protocol = protocol_designation;
 
-        DWORD host_type_namespace = NS_ALL;
-        auto ret = GetAddrInfoA(hostname.c_str(), port_str.c_str(), &hints, &result);
-        if (ret)
-        {
-            return false;
-        }
+    //    DWORD host_type_namespace = NS_ALL;
+    //    auto ret = GetAddrInfoA(hostname.c_str(), port_str.c_str(), &hints, &result);
+    //    if (ret)
+    //    {
+    //        return false;
+    //    }
 
-        sockaddr_in ipv4 = *((struct sockaddr_in*)result->ai_addr);
-        char ipstringbuffer[46];
-        InetNtopA(AF_INET, &ipv4.sin_addr, ipstringbuffer, 46);
+    //    sockaddr_in ipv4 = *((struct sockaddr_in*)result->ai_addr);
+    //    char ipstringbuffer[46];
+    //    InetNtopA(AF_INET, &ipv4.sin_addr, ipstringbuffer, 46);
 
-        ip = ipstringbuffer;
-        addr = ipv4;
-        WSACleanup();
-        return true;
-    }
+    //    ip = ipstringbuffer;
+    //    addr = ipv4;
+    //    WSACleanup();
+    //    return true;
+    //}
 
     bool wstr_to_int8(const std::wstring& content, int8_t& val)
     {
@@ -843,37 +843,37 @@ namespace storrent::utils
         return zI;
     }
 
-    int last_socket_err()
-    {
-    #if defined(_MSC_VER) || defined(WIN_VER)
-        return WSAGetLastError();
-    #else
-        return 0;
-    #endif
-    }
+    //int last_socket_err()
+    //{
+    //#if defined(_MSC_VER) || defined(WIN_VER)
+    //    return WSAGetLastError();
+    //#else
+    //    return 0;
+    //#endif
+    //}
 
-    std::string socket_err_str(int err)
-    {
-    #if defined(_MSC_VER) || defined(WIN_VER)
-        char* s = NULL;
-        FormatMessageA(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
-                       NULL,
-                       err,
-                       MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-                       (LPSTR)&s,
-                       0,
-                       NULL);
-        // fprintf(stderr, "%S\n", s);
-        std::string result{s};
-        LocalFree(s);
+    //std::string socket_err_str(int err)
+    //{
+    //#if defined(_MSC_VER) || defined(WIN_VER)
+    //    char* s = NULL;
+    //    FormatMessageA(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
+    //                   NULL,
+    //                   err,
+    //                   MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+    //                   (LPSTR)&s,
+    //                   0,
+    //                   NULL);
+    //    // fprintf(stderr, "%S\n", s);
+    //    std::string result{s};
+    //    LocalFree(s);
 
-        return result;
-    #else
-        return {};
-    #endif
-    }
+    //    return result;
+    //#else
+    //    return {};
+    //#endif
+    //}
 
-    std::string last_socket_err_str() { return socket_err_str(WSAGetLastError()); }
+    //std::string last_socket_err_str() { return socket_err_str(WSAGetLastError()); }
 
 #else
 

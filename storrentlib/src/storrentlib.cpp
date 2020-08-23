@@ -1,58 +1,40 @@
 // storrentlib.cpp : Defines the functions for the static library.
 #include "storrent/storrentlib.hpp"
-#include "storrent/pieces.hpp"
-#include "storrent/torrent.hpp"
-#include "storrent/tracker_manager.hpp"
+#include "storrent/engine.hpp"
+#include "storrent/torrent_session.hpp"
 #include "storrent/utils.hpp"
-#include <boost/asio.hpp>
 
 namespace storrent
 {
     namespace
     {
-        std::vector<std::string> peers_list;
-
-        struct downloader
-        {
-            void go(const std::vector<std::string>& peers) {}
-        };
-    } // namespace
-
-    int handle_peers(const std::vector<std::string>& peers)
-    {
-        downloader dl;
-        dl.go(peers);
-        return peers.size();
+        engine main_engine;
     }
 
-    session_id download_file(const std::string& filename)
+    info_hash start_session(const std::string& filename)
     {
         // make sure our file exists
         if (!utils::file_exists(filename))
-            return INVALID_SESSION_ID;
-        // first lets load our torrent file
-        auto tor = torrent::load_torrent_file(filename);
-        boost::asio::io_context io_ctx(1);
-        tracker_manager trackers(&io_ctx, tor);
-        trackers.start(&handle_peers);
+            return torrent_session::INVALID_ID;
+        // lets check if our engine is already running
+        if (!main_engine.is_running())
+        {
+            main_engine.start();
+        }
+        
 
-        return INVALID_SESSION_ID;
+
+
+        // TODOTODO: check to see if there is a resume file for this torrent
+        bool is_resume_file = false;
+        auto sesh = is_resume_file ? torrent_session::resume(filename) : torrent_session::make(filename);
+
+        return sesh->get_id();
     }
 
-    session_id get_download_progress(session_id download_id, download_progress& progress) { return INVALID_SESSION_ID; }
+    info_hash get_download_progress(int download_id, download_progress& progress)
+    {
+        return torrent_session::INVALID_ID;
+    }
 
-    // typedef int (*handle_peers_from_tracker)(torrent& tor, const std::vector<std::string>& peer_list);
-
-    // int handle_peers_list(torrent& tor, const std::vector<std::string>& peers)
-    //{
-    //    for (auto& p : peers)
-    //    {
-    //    }
-    //}
-
-    // void start(torrent& tor, handle_peers_from_tracker peers_callback)
-    //{
-    //    // check  to see if there is a single announce
-    //
-    //}
 } // namespace storrent

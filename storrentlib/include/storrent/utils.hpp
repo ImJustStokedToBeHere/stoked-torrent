@@ -1,5 +1,6 @@
 #pragma once
 #include "storrent/os_inc.hpp"
+#include <boost/functional/hash.hpp>
 #include <algorithm>
 #include <array>
 #include <charconv>
@@ -10,7 +11,6 @@
 #include <iostream>
 #include <random>
 #include <string>
-
 #include <string_view>
 
 namespace storrent::utils
@@ -68,6 +68,12 @@ namespace storrent::utils
         std::cout << "ERROR: " << result << std::endl;
     }
 
+    template <typename T>
+    void hash_combine(std::size_t& seed, const T& val)
+    {
+        boost::hash_combine(seed, val);
+    }
+
     std::chrono::milliseconds chrono_timestamp();
 
 #ifdef UNICODE
@@ -82,7 +88,7 @@ namespace storrent::utils
 
     std::wstring simple_str_to_wstr(const std::string& str);
     std::string simple_wstr_to_str(const std::wstring& str);
-    std::string ip_str(in_addr addr);
+    //std::string ip_str(in_addr addr);
     std::string timestamp_str_a();
     std::wstring timestamp_str_w();
     time_t timestamp();
@@ -149,17 +155,17 @@ namespace storrent::utils
     #define get_ip_from_hostname get_ip_from_hostname_a
 #endif
 
-    bool get_ip_from_hostname_w(const std::wstring& hostname,
-                                const std::wstring& port_str,
-                                IPPROTO protocol_designation,
-                                std::wstring& ip,
-                                SOCKADDR_IN& addr);
+    //bool get_ip_from_hostname_w(const std::wstring& hostname,
+    //                            const std::wstring& port_str,
+    //                            IPPROTO protocol_designation,
+    //                            std::wstring& ip,
+    //                            SOCKADDR_IN& addr);
 
-    bool get_ip_from_hostname_a(const std::string& hostname,
-                                const std::string& port_str,
-                                IPPROTO protocol_designation,
-                                std::string& ip,
-                                SOCKADDR_IN& addr);
+    //bool get_ip_from_hostname_a(const std::string& hostname,
+    //                            const std::string& port_str,
+    //                            IPPROTO protocol_designation,
+    //                            std::string& ip,
+    //                            SOCKADDR_IN& addr);
 
     bool wstr_to_int8(const std::wstring& content, int8_t& val);
 
@@ -207,9 +213,9 @@ namespace storrent::utils
 
     size_t generate_random_byte_str(char* aBuffer, size_t aIndex, size_t aCount);
 
-    int last_socket_err();
+    //int last_socket_err();
 
-    std::string socket_err_str(int err);
+    //std::string socket_err_str(int err);
 
-    std::string last_socket_err_str();
+    //std::string last_socket_err_str();
 } // namespace storrent::utils

@@ -10,11 +10,11 @@
 
 namespace storrent
 {
-    class bencode_empty;
-    class bencode_string;
-    class bencode_list;
-    class bencode_dictionary;
-    class bencode_integer;
+    struct bencode_empty;
+    struct bencode_string;
+    struct bencode_list;
+    struct bencode_dictionary;
+    struct bencode_integer;
 
     enum class bencode_element_type : unsigned short
     {

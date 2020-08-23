@@ -1,4 +1,5 @@
 #pragma once
+#include "storrent/os_inc.hpp"
 #include "storrent/torrent.hpp"
 #include <boost/asio.hpp>
 #include <boost/bind/bind.hpp>
@@ -13,13 +14,11 @@ namespace storrent
         resolved,
         connected,
         timed_out,
-        dead,
+        stopped,
         ok
     };
 
-    // typedef int (*handle_peers_func)(const std::vector<std::string>& peers);
-
-    typedef std::function<int(const std::vector<std::string>&)> handle_peers_func;
+    // typedef std::function<int(const std::vector<std::string>&)> handle_peers_func;
 
     struct remote_tracker
     {
@@ -28,94 +27,163 @@ namespace storrent
         virtual ~remote_tracker() {}
 
     protected:
-        virtual std::vector<char> get_handshake_msg() const = 0;
-        virtual size_t get_handshake_msg_len() const = 0;
+        virtual std::shared_ptr<std::vector<char>> get_handshake_msg() const = 0;
+        virtual std::size_t get_handshake_msg_len() const = 0;
         torrent_handle m_htor{nullptr};
     };
 
     struct udp_remote_tracker : public remote_tracker
     {
-        udp_remote_tracker(boost::asio::io_context* io_ctx, torrent_handle htor)
-            : remote_tracker(htor),
-              m_sock(*io_ctx),
-              m_connect_deadline(*io_ctx),
-              m_stopped{false},
-              m_state{tracker_state::none}
+        udp_remote_tracker(boost::asio::io_context& io_ctx, torrent_handle htor)
+            : remote_tracker(htor), sock(io_ctx), deadline(io_ctx), stopped{false}, state{tracker_state::none}
         {
         }
 
-        void start(boost::asio::ip::udp::resolver::results_type endpoints, handle_peers_func get_peers_callback)
+        virtual ~udp_remote_tracker() { this->sock.close(); }
+
+        void start(boost::asio::ip::udp::resolver::results_type endpoints,
+                   std::function<int(const std::vector<std::string>&)> get_peers_callback)
         {
             m_get_peers_callback = get_peers_callback;
-            m_endpoints = endpoints;
-            start_connect(endpoints.begin());
-            m_connect_deadline.async_wait(boost::bind(&udp_remote_tracker::check_timeout, this));
+            start_connect(endpoints);
+            deadline.async_wait(boost::bind(&udp_remote_tracker::check_timeout, this));
         }
 
-        void stop() {}
-
-    protected:
-        virtual std::vector<char> get_handshake_msg() const override { return {}; }
-        virtual size_t get_handshake_msg_len() const override { return 0; }
+        void stop()
+        {
+            this->stopped = true;
+            this->state = tracker_state::stopped;
+        }
 
     private:
-        void start_connect(boost::asio::ip::udp::resolver::results_type::iterator endpoint_itr)
-        {
-            if (endpoint_itr != m_endpoints.end())
-            {
-                m_connect_deadline.expires_after(std::chrono::seconds(CONNECT_DEADLINE_SECONDS));
-                m_sock.async_connect(endpoint_itr->endpoint(),
-                                     boost::bind(&udp_remote_tracker::handle_connect,
-                                                 this,
-                                                 boost::asio::placeholders::error,
-                                                 endpoint_itr));
-            }
-            else
-            {
-            }
-        }
+        virtual std::shared_ptr<std::vector<char>> get_handshake_msg() const override { return {}; }
+        virtual std::size_t get_handshake_msg_len() const override { return 0; }
 
-        void handle_connect(const boost::system::error_code& err,
-                            boost::asio::ip::udp::resolver::results_type::iterator endpoint_itr)
+        void start_write_handshake()
         {
-            if (m_stopped || m_state == tracker_state::dead)
+            if (this->stopped)
                 return;
 
-            // if the socket is closed when we get here then we must have timed out first so try the next endpoint
-            if (!m_sock.is_open())
-            {
-                start_connect(++endpoint_itr);
-            }
-            else if (err)
-            {
-                // there was a connection error
-            }
-            else
-            {
-                // we connected sucessfully, YAY!!!
-                m_endpoint = endpoint_itr->endpoint();
-                m_sock.async_send(boost::asio::buffer(get_handshake_msg()),
-                                  boost::bind(&udp_remote_tracker::handle_write,
+            auto handshake_msg = get_handshake_msg();
+
+            this->sock.async_send(boost::asio::buffer(*handshake_msg),
+                                  boost::bind(&udp_remote_tracker::handle_write_handshake,
                                               this,
                                               boost::asio::placeholders::error,
                                               boost::asio::placeholders::bytes_transferred));
+        }
+
+        void handle_write_handshake(const boost::system::error_code& err, std::size_t bytes_transferred) {}
+
+        void start_connect(boost::asio::ip::udp::resolver::results_type endpoints)
+        {
+            if (endpoints.begin() != endpoints.end())
+            {
+                this->state = tracker_state::resolved;
+                this->deadline.expires_after(std::chrono::seconds(CONNECT_DEADLINE_SECONDS));
+
+                boost::asio::async_connect(sock,
+                                           endpoints,
+                                           boost::bind(&udp_remote_tracker::handle_connect,
+                                                       this,
+                                                       boost::asio::placeholders::error,
+                                                       boost::asio::placeholders::endpoint));
+            }
+            else
+            {
+                // there were endpoints passed to this, we shouldn't have gotten this far
+                stop();
             }
         }
 
-        void handle_write(const boost::system::error_code& err, size_t bytes_sent) 
-        {
-            // we've written successfully
+        void handle_retry_connect(const boost::system::error_code& err) 
+        { 
+            if (!err)
+            {
+                if (this->sock.is_open())
+                {
+                    start_write_handshake();
+                }
+                else
+                {
+                    this->state = tracker_state::timed_out;
+                    this->stopped = true;
+                }
+            }
+            else
+            {
+                // there was an error so now we need to shut this  guy down
+                this->sock.close();
+                stop();
+            }
         }
 
-        void check_timeout() {}
+        void handle_connect(const boost::system::error_code& err, const boost::asio::ip::udp::endpoint& endpoint)
+        {
+            if (this->stopped)
+                return;
 
-        tracker_state m_state;
+            if (!err) // there was no error
+            {
+                // async_connect should have opened the socket
+                if (!this->sock.is_open())
+                {
+                    // the socket is not open so our connection must have timed out
+                    this->state = tracker_state::timed_out;
+                    // reset the deadline
+                    this->deadline.expires_after(std::chrono::seconds(CONNECT_DEADLINE_SECONDS));
+                    this->sock.async_connect(endpoint,
+                                             boost::bind(&udp_remote_tracker::handle_retry_connect,
+                                                         this,
+                                                         boost::asio::placeholders::error));
+                    return;
+                }
+                else
+                {
+                    this->endpoint = endpoint;
+                    start_write_handshake();
+                }
+            }
+            else if (err == boost::asio::error::not_found)
+            {
+                // there were no endpoints for us to connect to, our resolution failed but we somehow still got here
+                stop();
+                return;
+            }
+            else
+            {
+                // there was some other error
+                // We need to close the socket used in the previous connection attempt
+                // before starting a new one.
+
+                this->sock.close();
+            }
+        }
+
+        void check_timeout()
+        {
+            if (this->stopped)
+                return;
+
+            if (this->deadline.expiry() <= boost::asio::steady_timer::clock_type::now())
+            {
+                // the deadline passed. close the socket, this will also cancel any outstanding async operations
+                this->sock.close();
+                this->deadline.expires_at(boost::asio::steady_timer::time_point::max());
+            }
+
+            this->deadline.async_wait(boost::bind(&udp_remote_tracker::check_timeout, this));
+        }
+
+        tracker_state state;
         boost::asio::io_context* m_io_ctx{nullptr};
-        boost::asio::ip::udp::socket m_sock;
-        boost::asio::steady_timer m_connect_deadline;
-        boost::asio::ip::udp::resolver::results_type m_endpoints;
-        boost::asio::ip::udp::endpoint m_endpoint;
-        bool m_stopped;
-        handle_peers_func m_get_peers_callback;
+        boost::asio::ip::udp::socket sock;
+        boost::asio::steady_timer deadline;
+        // boost::asio::ip::udp::resolver::results_type m_endpoints;
+        boost::asio::ip::udp::endpoint endpoint;
+        bool stopped;
+        std::function<int(const std::vector<std::string>&)> m_get_peers_callback;
     };
+
+    constexpr auto s = sizeof(boost::asio::ip::udp::socket);
 } // namespace storrent
