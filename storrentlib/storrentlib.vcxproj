@@ -21,10 +21,12 @@
   <ItemGroup>
     <ClCompile Include="src\engine.cpp" />
     <ClCompile Include="src\info_hash.cpp" />
+    <ClCompile Include="src\remote_tracker.cpp" />
     <ClCompile Include="src\sha1.cpp" />
     <ClCompile Include="src\storrentlib.cpp" />
     <ClCompile Include="src\sys_utils.cpp" />
     <ClCompile Include="src\torrent.cpp" />
+    <ClCompile Include="src\torrent_session.cpp" />
     <ClCompile Include="src\tracker_manager.cpp" />
     <ClCompile Include="src\utils.cpp" />
   </ItemGroup>
@@ -32,6 +34,7 @@
     <ClInclude Include="include\storrent\bencode.hpp" />
     <ClInclude Include="include\storrent\config.hpp" />
     <ClInclude Include="include\storrent\engine.hpp" />
+    <ClInclude Include="include\storrent\error_handling.hpp" />
     <ClInclude Include="include\storrent\info_hash.hpp" />
     <ClInclude Include="include\storrent\os_inc.hpp" />
     <ClInclude Include="include\storrent\pieces.hpp" />
@@ -45,6 +48,7 @@
     <ClInclude Include="include\storrent\torrent.hpp" />
     <ClInclude Include="include\storrent\torrent_file.hpp" />
     <ClInclude Include="include\storrent\tracker_manager.hpp" />
+    <ClInclude Include="include\storrent\tracker_request.hpp" />
     <ClInclude Include="include\storrent\uri.hpp" />
     <ClInclude Include="include\storrent\utils.hpp" />
   </ItemGroup>
@@ -155,7 +159,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>x_WIN32_WINNT=0x0A00;NOMINMAX;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING;x_WIN32_WINNT=0x0A00;NOMINMAX;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>

@@ -73,7 +73,11 @@ namespace storrent
             return nullptr;
         }
 
-        void start() { this->stopped = false; }
+        void start() 
+        { 
+            this->stopped = false; 
+
+        }
 
         bool is_running() const { return !this->stopped; }
     private:

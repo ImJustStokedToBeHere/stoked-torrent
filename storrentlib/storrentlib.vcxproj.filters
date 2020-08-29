@@ -39,6 +39,12 @@
     <ClCompile Include="src\info_hash.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\remote_tracker.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\torrent_session.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\storrent\storrentlib.hpp">
@@ -83,9 +89,6 @@
     <ClInclude Include="include\storrent\piece_queue.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\storrent\tracker_manager.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\storrent\remote_tracker.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -93,6 +96,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\storrent\torrent_session.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\storrent\tracker_manager.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\storrent\tracker_request.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\storrent\error_handling.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,4 +1,7 @@
 #include "storrent/utils.hpp"
+#include <locale>
+#include <codecvt>
+
 
 namespace storrent::utils
 {
@@ -21,6 +24,7 @@ namespace storrent::utils
                     : std::string();
     }
 
+#if defined(_MSC_VER) || defined(WIN_VER)
     std::wstring str_to_wstr(const std::string& s)
     {
         auto slength = static_cast<int>(s.length() + 1);
@@ -38,6 +42,11 @@ namespace storrent::utils
         WideCharToMultiByte(CP_ACP, 0, s.c_str(), slength, &r[0], len, 0, 0);
         return r;
     }
+ #else
+    std::wstring str_to_wstr(const std::string& s) { return simple_str_to_wstr(s);}
+
+    std::wstring wstr_to_str(const std::wstring& s) { return simple_wstr_to_str(s); }
+#endif
 
     std::string const& to_string(const std::string& s) { return s; }
 
@@ -49,9 +58,17 @@ namespace storrent::utils
             std::chrono::system_clock::now().time_since_epoch());
     }
 
-    std::wstring simple_str_to_wstr(const std::string& str) { return {str.cbegin(), str.cend()}; }
+    std::wstring simple_str_to_wstr(const std::string& str) 
+    { 
+        std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+        return converter.from_bytes(str);
+    }
 
-    std::string simple_wstr_to_str(const std::wstring& str) { return {str.cbegin(), str.cend()}; }
+    std::string simple_wstr_to_str(const std::wstring& str)
+    {
+        std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+        return converter.to_bytes(str);
+    }
 
 #if defined(_MSC_VER) || defined(WIN_VER)
     typedef struct timeval
@@ -105,7 +122,7 @@ namespace storrent::utils
         return std::wstring(currentTime);
     }
 
-    //std::string ip_str(in_addr addr)
+    // std::string ip_str(in_addr addr)
     //{
     //    char ip[16];
     //    inet_ntop(AF_INET, &addr, ip, 16);
@@ -133,6 +150,176 @@ namespace storrent::utils
 
         return std::string(currentTime);
     }
+
+  
+
+    std::string timestamp_str_fmt_a(const std::string& aFmt, const bool& aAppendMilliseconds)
+    {
+        timeval curTime;
+        time_of_day(&curTime);
+        int milli = curTime.tv_usec / 1000;
+
+        time_t rawtime;
+        // struct tm *timeinfo = new tm;
+        tm timeinfo{};
+        // tm timeinfo;
+        char buffer[80];
+
+        time(&rawtime);
+        localtime_s(&timeinfo, &rawtime);
+
+        strftime(&buffer[0], 80, aFmt.c_str(), &timeinfo);
+
+        char currentTime[84] = "";
+        if (!aAppendMilliseconds)
+        {
+            sprintf_s(currentTime, "%s", buffer);
+        }
+        else
+        {
+            sprintf_s(currentTime, "%s.%d", buffer, milli);
+        }
+
+        return std::string(currentTime);
+    }
+
+    std::string timestamp_str_fmt_a(const std::string& aFmt, time_t val)
+    {
+
+        time_t rawtime{val};
+        // struct tm *timeinfo = new tm;
+        tm timeinfo{};
+        // tm timeinfo;
+        char buffer[80];
+        if (!val)
+            time(&rawtime);
+        localtime_s(&timeinfo, &rawtime);
+        strftime(&buffer[0], 80, aFmt.c_str(), &timeinfo);
+
+        return std::string(buffer);
+    }
+
+    std::wstring timestamp_str_fmt_w(const std::wstring& aFmt, const bool& aAppendMilliseconds)
+    {
+        timeval curTime;
+        time_of_day(&curTime);
+        int milli = curTime.tv_usec / 1000;
+
+        time_t rawtime;
+        // struct tm *timeinfo = new tm;
+        tm timeinfo{};
+        // tm timeinfo;
+        wchar_t buffer[80];
+
+        time(&rawtime);
+        localtime_s(&timeinfo, &rawtime);
+
+        wcsftime(&buffer[0], 80, aFmt.c_str(), &timeinfo);
+
+        wchar_t currentTime[84] = L"";
+        if (!aAppendMilliseconds)
+        {
+            swprintf_s(currentTime, L"%s", buffer);
+        }
+        else
+        {
+            swprintf_s(currentTime, L"%s.%d", buffer, milli);
+        }
+
+        return std::wstring(currentTime);
+    }
+
+    std::wstring timestamp_str_fmt_w(const std::wstring& aFmt, time_t val)
+    {
+
+        time_t rawtime{val};
+        // struct tm *timeinfo = new tm;
+        tm timeinfo{};
+        // tm timeinfo;
+        wchar_t buffer[80];
+        if (!val)
+            time(&rawtime);
+        localtime_s(&timeinfo, &rawtime);
+        wcsftime(&buffer[0], 80, aFmt.c_str(), &timeinfo);
+
+        return std::wstring(buffer);
+    }
+
+    
+#else
+
+    int64_t time_of_day(timeval* tp)
+    {
+        gettimeofday(tp, nullptr);                                         // get current time
+        long long milliseconds = tp->tv_sec * 1000LL + tp->tv_usec / 1000; // calculate milliseconds
+        // printf("milliseconds: %lld\n", milliseconds);
+        return milliseconds;
+    }
+
+    std::string timestamp_str()
+    {
+        timeval curTime;
+        time_of_day(&curTime);
+        int milli = curTime.tv_usec / 1000;
+
+        time_t rawtime = time(NULL);
+        // tm timeinfo(NULL);
+        char buffer[80];
+
+        time(&rawtime);
+        struct tm* timeinfo = localtime(&rawtime);
+
+        strftime(buffer, 80, "%Y-%m-%d %H:%M:%S", timeinfo);
+
+        char currentTime[84] = "";
+        sprintf(currentTime, "%s.%d", buffer, milli);
+
+        return std::string(currentTime);
+    }
+
+    INLINE std::time_t timestamp()
+    {
+        timeval curTime;
+        time_of_day(&curTime);
+        int milli = curTime.tv_usec / 1000;
+
+        time_t rawtime = time(NULL);
+        // tm timeinfo(NULL);
+        //		char buffer[80];
+
+        time(&rawtime);
+        struct tm* timeinfo = localtime(&rawtime);
+        return rawtime;
+    }
+
+    std::string timestamp_str(const std::string& aFmt, const bool& aAppendMilliseconds)
+    {
+        timeval curTime;
+        time_of_day(&curTime);
+        int milli = curTime.tv_usec / 1000;
+
+        time_t rawtime;
+        char buffer[80];
+
+        time(&rawtime);
+        struct tm* timeinfo = localtime(&rawtime);
+
+        strftime(&buffer[0], 80, aFmt.c_str(), timeinfo);
+
+        char currentTime[84] = "";
+        if (!aAppendMilliseconds)
+        {
+            sprintf(currentTime, "%s", buffer);
+        }
+        else
+        {
+            sprintf(currentTime, "%s.%d", buffer, milli);
+        }
+
+        return std::string(currentTime);
+    }
+
+#endif
 
     std::time_t timestamp()
     {
@@ -237,181 +424,6 @@ namespace storrent::utils
         return mktime(&timeinfo);
     }
 
-    std::string timestamp_str_fmt_a(const std::string& aFmt, const bool& aAppendMilliseconds)
-    {
-        timeval curTime;
-        time_of_day(&curTime);
-        int milli = curTime.tv_usec / 1000;
-
-        time_t rawtime;
-        // struct tm *timeinfo = new tm;
-        tm timeinfo{};
-        // tm timeinfo;
-        char buffer[80];
-
-        time(&rawtime);
-        localtime_s(&timeinfo, &rawtime);
-
-        strftime(&buffer[0], 80, aFmt.c_str(), &timeinfo);
-
-        char currentTime[84] = "";
-        if (!aAppendMilliseconds)
-        {
-            sprintf_s(currentTime, "%s", buffer);
-        }
-        else
-        {
-            sprintf_s(currentTime, "%s.%d", buffer, milli);
-        }
-
-        return std::string(currentTime);
-    }
-
-    std::string timestamp_str_fmt_a(const std::string& aFmt, time_t val)
-    {
-
-        time_t rawtime{val};
-        // struct tm *timeinfo = new tm;
-        tm timeinfo{};
-        // tm timeinfo;
-        char buffer[80];
-        if (!val)
-            time(&rawtime);
-        localtime_s(&timeinfo, &rawtime);
-        strftime(&buffer[0], 80, aFmt.c_str(), &timeinfo);
-
-        return std::string(buffer);
-    }
-
-    std::wstring timestamp_str_fmt_w(const std::wstring& aFmt, const bool& aAppendMilliseconds)
-    {
-        timeval curTime;
-        time_of_day(&curTime);
-        int milli = curTime.tv_usec / 1000;
-
-        time_t rawtime;
-        // struct tm *timeinfo = new tm;
-        tm timeinfo{};
-        // tm timeinfo;
-        wchar_t buffer[80];
-
-        time(&rawtime);
-        localtime_s(&timeinfo, &rawtime);
-
-        wcsftime(&buffer[0], 80, aFmt.c_str(), &timeinfo);
-
-        wchar_t currentTime[84] = L"";
-        if (!aAppendMilliseconds)
-        {
-            swprintf_s(currentTime, L"%s", buffer);
-        }
-        else
-        {
-            swprintf_s(currentTime, L"%s.%d", buffer, milli);
-        }
-
-        return std::wstring(currentTime);
-    }
-
-    std::wstring timestamp_str_fmt_w(const std::wstring& aFmt, time_t val)
-    {
-
-        time_t rawtime{val};
-        // struct tm *timeinfo = new tm;
-        tm timeinfo{};
-        // tm timeinfo;
-        wchar_t buffer[80];
-        if (!val)
-            time(&rawtime);
-        localtime_s(&timeinfo, &rawtime);
-        wcsftime(&buffer[0], 80, aFmt.c_str(), &timeinfo);
-
-        return std::wstring(buffer);
-    }
-
-    char* reverse_bytes(std::string val) { return reverse_bytes(val.data(), val.size()); }
-
-    char* reverse_bytes(char* start, size_t size)
-    {
-        char* s = start;
-        char* e = s + size;
-
-        std::reverse(s, e);
-        return s;
-    }
-
-    //bool get_ip_from_hostname_w(const std::wstring& hostname,
-    //                            const std::wstring& port_str,
-    //                            IPPROTO protocol_designation,
-    //                            std::wstring& ip,
-    //                            SOCKADDR_IN& addr)
-    //{
-
-    //    if (WSAData wsa{}; 0 != WSAStartup(MAKEWORD(2, 2), &wsa))
-    //    {
-    //        throw WSAGetLastError();
-    //    }
-
-    //    ADDRINFOW* result = NULL;
-    //    ADDRINFOW hints{};
-
-    //    ZeroMemory(&hints, sizeof(hints));
-    //    hints.ai_family = AF_INET;
-    //    // hints.ai_socktype = SOCK_DGRAM;
-    //    hints.ai_protocol = protocol_designation;
-
-    //    DWORD host_type_namespace = NS_ALL;
-    //    auto ret = GetAddrInfoW(hostname.c_str(), port_str.c_str(), &hints, &result);
-    //    if (ret)
-    //    {
-    //        return false;
-    //    }
-
-    //    sockaddr_in ipv4 = *((struct sockaddr_in*)result->ai_addr);
-    //    wchar_t ipstringbuffer[46];
-    //    InetNtopW(AF_INET, &ipv4.sin_addr, ipstringbuffer, 46);
-
-    //    ip = ipstringbuffer;
-    //    addr = ipv4;
-    //    WSACleanup();
-    //    return true;
-    //}
-
-    //bool get_ip_from_hostname_a(const std::string& hostname,
-    //                            const std::string& port_str,
-    //                            IPPROTO protocol_designation,
-    //                            std::string& ip,
-    //                            SOCKADDR_IN& addr)
-    //{
-    //    if (WSAData wsa{}; 0 != WSAStartup(MAKEWORD(2, 2), &wsa))
-    //    {
-    //        throw WSAGetLastError();
-    //    }
-
-    //    ADDRINFOA* result = NULL;
-    //    ADDRINFOA hints{};
-
-    //    ZeroMemory(&hints, sizeof(hints));
-    //    hints.ai_family = AF_INET;
-    //    // hints.ai_socktype = SOCK_DGRAM;
-    //    hints.ai_protocol = protocol_designation;
-
-    //    DWORD host_type_namespace = NS_ALL;
-    //    auto ret = GetAddrInfoA(hostname.c_str(), port_str.c_str(), &hints, &result);
-    //    if (ret)
-    //    {
-    //        return false;
-    //    }
-
-    //    sockaddr_in ipv4 = *((struct sockaddr_in*)result->ai_addr);
-    //    char ipstringbuffer[46];
-    //    InetNtopA(AF_INET, &ipv4.sin_addr, ipstringbuffer, 46);
-
-    //    ip = ipstringbuffer;
-    //    addr = ipv4;
-    //    WSACleanup();
-    //    return true;
-    //}
 
     bool wstr_to_int8(const std::wstring& content, int8_t& val)
     {
@@ -843,110 +855,15 @@ namespace storrent::utils
         return zI;
     }
 
-    //int last_socket_err()
-    //{
-    //#if defined(_MSC_VER) || defined(WIN_VER)
-    //    return WSAGetLastError();
-    //#else
-    //    return 0;
-    //#endif
-    //}
+    char* reverse_bytes(std::string val) { return reverse_bytes(val.data(), val.size()); }
 
-    //std::string socket_err_str(int err)
-    //{
-    //#if defined(_MSC_VER) || defined(WIN_VER)
-    //    char* s = NULL;
-    //    FormatMessageA(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
-    //                   NULL,
-    //                   err,
-    //                   MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-    //                   (LPSTR)&s,
-    //                   0,
-    //                   NULL);
-    //    // fprintf(stderr, "%S\n", s);
-    //    std::string result{s};
-    //    LocalFree(s);
-
-    //    return result;
-    //#else
-    //    return {};
-    //#endif
-    //}
-
-    //std::string last_socket_err_str() { return socket_err_str(WSAGetLastError()); }
-
-#else
-
-    int64_t time_of_day(timeval* tp)
+    char* reverse_bytes(char* start, size_t size)
     {
-        gettimeofday(tp, nullptr);                                         // get current time
-        long long milliseconds = tp->tv_sec * 1000LL + tp->tv_usec / 1000; // calculate milliseconds
-        // printf("milliseconds: %lld\n", milliseconds);
-        return milliseconds;
+        char* s = start;
+        char* e = s + size;
+
+        std::reverse(s, e);
+        return s;
     }
 
-    std::string timestamp_str()
-    {
-        timeval curTime;
-        time_of_day(&curTime);
-        int milli = curTime.tv_usec / 1000;
-
-        time_t rawtime = time(NULL);
-        // tm timeinfo(NULL);
-        char buffer[80];
-
-        time(&rawtime);
-        struct tm* timeinfo = localtime(&rawtime);
-
-        strftime(buffer, 80, "%Y-%m-%d %H:%M:%S", timeinfo);
-
-        char currentTime[84] = "";
-        sprintf(currentTime, "%s.%d", buffer, milli);
-
-        return std::string(currentTime);
-    }
-
-    INLINE std::time_t timestamp()
-    {
-        timeval curTime;
-        time_of_day(&curTime);
-        int milli = curTime.tv_usec / 1000;
-
-        time_t rawtime = time(NULL);
-        // tm timeinfo(NULL);
-        //		char buffer[80];
-
-        time(&rawtime);
-        struct tm* timeinfo = localtime(&rawtime);
-        return rawtime;
-    }
-
-    std::string timestamp_str(const std::string& aFmt, const bool& aAppendMilliseconds)
-    {
-        timeval curTime;
-        time_of_day(&curTime);
-        int milli = curTime.tv_usec / 1000;
-
-        time_t rawtime;
-        char buffer[80];
-
-        time(&rawtime);
-        struct tm* timeinfo = localtime(&rawtime);
-
-        strftime(&buffer[0], 80, aFmt.c_str(), timeinfo);
-
-        char currentTime[84] = "";
-        if (!aAppendMilliseconds)
-        {
-            sprintf(currentTime, "%s", buffer);
-        }
-        else
-        {
-            sprintf(currentTime, "%s.%d", buffer, milli);
-        }
-
-        return std::string(currentTime);
-    }
-
-#endif
-}
+} // namespace storrent::utils

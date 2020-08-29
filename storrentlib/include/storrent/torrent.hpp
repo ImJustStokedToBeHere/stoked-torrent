@@ -9,14 +9,11 @@
 
 namespace storrent
 {
-    struct torrent;
-    typedef std::shared_ptr<torrent> torrent_handle;
-
     struct torrent
     {
     public:
         static constexpr auto BLOCK_LEN = 0x4000;
-        static torrent_handle load_torrent_file(const std::string& filename);
+        static std::shared_ptr<torrent> load_torrent_file(const std::string& filename);
 
         torrent() : torrent({}, {}, {}, {}, 0, {}, {}, 0, {}, {}, true, {}) {}
 

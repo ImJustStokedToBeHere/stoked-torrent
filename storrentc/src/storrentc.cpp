@@ -1,46 +1,61 @@
- //storrentc.cpp : This file contains the 'main' function. Program execution begins and ends there.
- #include <storrent/storrentlib.hpp>
+// storrentc.cpp : This file contains the 'main' function. Program execution begins and ends there.
 #include <iostream>
+#include <storrent/storrentlib.hpp>
 
+
+typedef int (*t_somefunc)(int, int);
+
+struct Good
+{
+    int doit(int i, int j){return i + j};
+};
 
 int main(int argc, char** argv)
 {
     std::string filename("C:\\Users\\JoeVidunas\\source\\repos\\stoked-torrent\\data\\Ghost in the Shell (2017) "
                          "[BluRay] [720p] [YTS.AM] - Copy.torrent");
-     std::cout << "Hello World!\n";
-     std::cout << "download: " << storrent::start_session(filename) << std::endl;
-     // std::cout << "called function: " << storrent::start_session() << std::endl;
-    ///*torrent_download download(filename);
-    //download.start();*/
-    ///*torrent_session session;
-    //session.start(filename);
-    //auto progress = session.get_download_progress();*/
 
+    std::string outdir("/");
+    std::cout << "Hello World!\n";
+    std::cout << "download: " << storrent::start_session(filename, outdir).hex() << std::endl;
+
+    //Good g;
+
+    // std::function<int(int,int)> f = std::bind(&Good::doit, g, 0, 1);
+    
+
+
+    // std::cout << "called function: " << storrent::start_session() << std::endl;
+    ///*torrent_download download(filename);
+    // download.start();*/
+    ///*torrent_session session;
+    // session.start(filename);
+    // auto progress = session.get_download_progress();*/
 
     ///*boost::asio::io_context io_context(1);
-    //boost::asio::ip::udp::socket sock(io_context);
-    //boost::asio::ip::udp::resolver res(sock.get_executor());*/
-    //boost::asio::io_context io_context(1);
-    //boost::asio::ip::udp::resolver res(io_context);
-    //boost::system::error_code err;
-    //auto results = res.resolve("tracker.coppersurfer.tk",
+    // boost::asio::ip::udp::socket sock(io_context);
+    // boost::asio::ip::udp::resolver res(sock.get_executor());*/
+    // boost::asio::io_context io_context(1);
+    // boost::asio::ip::udp::resolver res(io_context);
+    // boost::system::error_code err;
+    // auto results = res.resolve("tracker.coppersurfer.tk",
     //                           "6969",
     //                           boost::asio::ip::udp::resolver::all_matching,
     //                           err);
-    //if (!err)
+    // if (!err)
     //{
     //    for (auto& i : results)
     //    {
     //        std::cout << "ep:" << i.endpoint() << std::endl;
     //    }
     //}
-    //else
+    // else
     //{
     //    std::cout << "error: " << err.message() << std::endl;
     //}
     //
 
-    //return 1;
+    // return 1;
 }
 //
 //#include <sdkddkver.h>
@@ -52,10 +67,10 @@ int main(int argc, char** argv)
 //#include <thread>
 //#include <functional>
 //#include <stdexcept>
-// 
-//class TcpConnection
+//
+// class TcpConnection
 //{
-//public:
+// public:
 //    TcpConnection(const std::string& host, const std::string& port)
 //        : m_host(host), m_port(port), m_socket(m_io_service), m_work(m_io_service)
 //    {
@@ -141,7 +156,7 @@ int main(int argc, char** argv)
 //
 //    bool has_message() { return !m_recv_queue.empty(); }
 //
-//private:
+// private:
 //    std::string m_host;
 //    std::string m_port;
 //    std::queue<std::string> m_recv_queue;
@@ -154,7 +169,7 @@ int main(int argc, char** argv)
 //    boost::asio::ip::tcp::socket m_socket;
 //};
 //
-//int main()
+// int main()
 //{
 //    TcpConnection connection("irc.quakenet.org", "6667");
 //    connection.connect();

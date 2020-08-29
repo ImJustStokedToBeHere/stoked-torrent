@@ -11,7 +11,7 @@ namespace storrent
         engine main_engine;
     }
 
-    info_hash start_session(const std::string& filename)
+    info_hash start_session(const std::string& filename, const std::string& dir_name)
     {
         // make sure our file exists
         if (!utils::file_exists(filename))
@@ -27,7 +27,7 @@ namespace storrent
 
         // TODOTODO: check to see if there is a resume file for this torrent
         bool is_resume_file = false;
-        auto sesh = is_resume_file ? torrent_session::resume(filename) : torrent_session::make(filename);
+        auto sesh = is_resume_file ? torrent_session::resume(filename) : torrent_session::make(filename, dir_name);
 
         return sesh->get_id();
     }

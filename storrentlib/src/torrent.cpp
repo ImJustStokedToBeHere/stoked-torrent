@@ -4,7 +4,7 @@
 
 namespace storrent
 {
-    torrent_handle torrent::load_torrent_file(const std::string& filename)
+    std::shared_ptr<torrent> torrent::load_torrent_file(const std::string& filename)
     {
         auto bencode_doc = bencode_doc::parse_doc(filename);
         if (!bencode_doc)
