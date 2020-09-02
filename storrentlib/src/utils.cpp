@@ -1,7 +1,6 @@
 #include "storrent/utils.hpp"
-#include <locale>
 #include <codecvt>
-
+#include <locale>
 
 namespace storrent::utils
 {
@@ -42,8 +41,8 @@ namespace storrent::utils
         WideCharToMultiByte(CP_ACP, 0, s.c_str(), slength, &r[0], len, 0, 0);
         return r;
     }
- #else
-    std::wstring str_to_wstr(const std::string& s) { return simple_str_to_wstr(s);}
+#else
+    std::wstring str_to_wstr(const std::string& s) { return simple_str_to_wstr(s); }
 
     std::wstring wstr_to_str(const std::wstring& s) { return simple_wstr_to_str(s); }
 #endif
@@ -52,14 +51,16 @@ namespace storrent::utils
 
     std::wstring const& to_wstring(const std::wstring& s) { return s; }
 
+    // std::string const& to_string(const std::string_view& s) { return s.data(); }
+
     std::chrono::milliseconds chrono_timestamp()
     {
         return std::chrono::duration_cast<std::chrono::milliseconds>(
             std::chrono::system_clock::now().time_since_epoch());
     }
 
-    std::wstring simple_str_to_wstr(const std::string& str) 
-    { 
+    std::wstring simple_str_to_wstr(const std::string& str)
+    {
         std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
         return converter.from_bytes(str);
     }
@@ -150,8 +151,6 @@ namespace storrent::utils
 
         return std::string(currentTime);
     }
-
-  
 
     std::string timestamp_str_fmt_a(const std::string& aFmt, const bool& aAppendMilliseconds)
     {
@@ -245,7 +244,6 @@ namespace storrent::utils
         return std::wstring(buffer);
     }
 
-    
 #else
 
     int64_t time_of_day(timeval* tp)
@@ -423,7 +421,6 @@ namespace storrent::utils
         timeinfo.tm_yday += val;
         return mktime(&timeinfo);
     }
-
 
     bool wstr_to_int8(const std::wstring& content, int8_t& val)
     {

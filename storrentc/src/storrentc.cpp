@@ -3,12 +3,12 @@
 #include <storrent/storrentlib.hpp>
 
 
-typedef int (*t_somefunc)(int, int);
+//typedef int (*t_somefunc)(int, int);
 
-struct Good
-{
-    int doit(int i, int j){return i + j};
-};
+//struct Good
+//{
+//    int doit(int i, int j){return i + j};
+//};
 
 int main(int argc, char** argv)
 {
@@ -18,6 +18,9 @@ int main(int argc, char** argv)
     std::string outdir("/");
     std::cout << "Hello World!\n";
     std::cout << "download: " << storrent::start_session(filename, outdir).hex() << std::endl;
+
+}
+
 
     //Good g;
 
@@ -56,7 +59,7 @@ int main(int argc, char** argv)
     //
 
     // return 1;
-}
+
 //
 //#include <sdkddkver.h>
 //#include <boost/asio.hpp>

@@ -31,6 +31,8 @@ namespace storrent::utils
 
     std::wstring const& to_wstring(const std::wstring& s);
 
+    // std::string const& to_string(const std::string_view& s);
+
     template <typename... Args>
     std::string make_str(Args const&... args)
     {

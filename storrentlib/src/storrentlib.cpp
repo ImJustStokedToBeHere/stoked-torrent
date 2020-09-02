@@ -3,6 +3,7 @@
 #include "storrent/engine.hpp"
 #include "storrent/torrent_session.hpp"
 #include "storrent/utils.hpp"
+#include "storrent/tracker_manager.hpp"
 
 namespace storrent
 {
@@ -22,12 +23,16 @@ namespace storrent
             main_engine.start();
         }
         
-
-
-
         // TODOTODO: check to see if there is a resume file for this torrent
         bool is_resume_file = false;
         auto sesh = is_resume_file ? torrent_session::resume(filename) : torrent_session::make(filename, dir_name);
+
+        auto tracker_mgr = std::make_shared<tracker_manager>(sesh);
+        sesh->set_trackers_mgr(tracker_mgr);
+        sesh->start_download();
+
+
+
 
         return sesh->get_id();
     }

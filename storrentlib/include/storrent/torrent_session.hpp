@@ -28,12 +28,12 @@ namespace storrent
 
         inline static const info_hash INVALID_ID;
 
-        torrent_session(std::shared_ptr<torrent> tor_ptr, const std::string& source_file_directory_name)
+        torrent_session(std::shared_ptr<torrent> torr, const std::string& source_file_directory_name)
             : src_dir_name{source_file_directory_name},
               cur_state{state::stopped},
               prev_state{state::stopped},
-              tor_ptr{tor_ptr},
-              trackers_ptr{std::make_shared<tracker_manager>(shared_from_this())}
+              tor_ptr{torr},
+              trackers_ptr{nullptr}
         {
         }
 
@@ -53,7 +53,8 @@ namespace storrent
 
         void start_upload()
         {
-            // here is where we need to figure out what pieces we have, if the file is complete then we have all of them
+
+
         }
 
         void start_download();
@@ -65,12 +66,15 @@ namespace storrent
             //this->trackers().stop(); 
         }
 
-        const info_hash& get_id() const { return this->tor().info_hash_val(); }
+        const info_hash& get_id() const { return this->tor_ptr->info_hash_val(); }
 
-        const torrent& tor() const { return *(this->tor_ptr); }
-        torrent& tor() { return *(this->tor_ptr); }
+        // const torrent& tor() const { return *(this->tor_ptr); }
+        std::shared_ptr<torrent> tor() { return this->tor_ptr; }
 
-        tracker_manager& trackers() const { return *(this->trackers_ptr); }
+        // tracker_manager& get_trackers_mgr() const { return *(this->trackers_ptr); }
+        std::shared_ptr<tracker_manager> get_trackers_mgr() const { return this->trackers_ptr; }
+        void set_trackers_mgr(std::shared_ptr<tracker_manager> trackers) { this->trackers_ptr = trackers; }
+        
 
         std::uint64_t get_downloaded_bytes_count() const { return 0; }
         std::uint64_t get_bytes_left_count() const { return 0; }
@@ -81,6 +85,8 @@ namespace storrent
         // we need to check then engine against available connections and connections in use by this and other 
         // session, how much we actually have downloaded, if we have enough peers that have all the pieces we need
         std::int32_t peers_wanted() const { return -1; }
+
+        std::vector<info_hash> get_hashes() { return {tor_ptr->info_hash_val()}; }
     private:
         std::shared_ptr<tracker_manager> trackers_ptr;
         std::shared_ptr<torrent> tor_ptr;

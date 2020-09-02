@@ -1,5 +1,6 @@
 #pragma once
 #include "storrent/utils.hpp"
+#include <string_view>
 #include <stdexcept>
 
 namespace storrent
@@ -15,7 +16,7 @@ namespace storrent
         virtual char const* what() const
         {
             auto s = utils::make_str("function not implemented at file: ",
-                                     file,
+                                     file.data(),
                                      " line: ",
                                      line,
                                      ", except message: ",

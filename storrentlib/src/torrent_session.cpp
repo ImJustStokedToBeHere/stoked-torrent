@@ -15,10 +15,13 @@ namespace storrent
 
     void torrent_session::start_download()
     {
-        //this->trackers_ptr->start_socket(std::bind(&torrent_session::handle_peers, this, std::placeholders::_1));
-
-
-
-
+        // here is where we need to figure out what pieces we have, if the file is complete then we have all of them
+        // trackers_ptr->start_io();
+        if (trackers_ptr->is_ready().get())
+        {
+            auto hashes = get_hashes();
+            auto scrape_results = trackers_ptr->get_scrape_results(hashes);
+        }
+        
     }
 } // namespace storrent

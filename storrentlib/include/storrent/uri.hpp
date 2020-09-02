@@ -44,7 +44,8 @@ namespace storrent
                     // result.protocol = std::string_view(protocolStart, std::difference(protocolEnd, protocolStart));
                     
                     auto c = protocolStart;
-                    result.protocol = std::string_view{&*protocolStart, size_t(std::distance(protocolEnd, protocolStart))};
+                    auto len = size_t(std::distance(protocolStart, protocolEnd));
+                    result.protocol = std::string_view{&*protocolStart, len};
                     protocolEnd += 3; //      ://
                 }
                 else
@@ -61,23 +62,23 @@ namespace storrent
                                      (pathStart != uriEnd) ? pathStart : queryStart,
                                      ':'); // check for port
 
-            result.host = std::string_view(&*hostStart, size_t(std::distance(hostEnd, hostStart)));
+            result.host = std::string_view(&*hostStart, size_t(std::distance(hostStart, hostEnd)));
 
             // port
             if ((hostEnd != uriEnd) && ((&*(hostEnd))[0] == ':')) // we have a port
             {
                 hostEnd++;
                 auto portEnd = (pathStart != uriEnd) ? pathStart : queryStart;
-                result.port = std::string_view(&*hostEnd, size_t(std::distance(portEnd, hostEnd)));
+                result.port = std::string_view(&*hostEnd, size_t(std::distance(hostEnd, portEnd)));
             }
 
             // path
             if (pathStart != uriEnd)
-                result.path = std::string_view(&*pathStart, size_t(std::distance(queryStart, pathStart)));
+                result.path = std::string_view(&*pathStart, size_t(std::distance(pathStart, queryStart)));
 
             // query
             if (queryStart != uriEnd)
-                result.query_string = std::string_view(&*queryStart, size_t(std::distance(uri_str.end(), queryStart)));
+                result.query_string = std::string_view(&*queryStart, size_t(std::distance(queryStart, uri_str.end())));
 
             return result;
 

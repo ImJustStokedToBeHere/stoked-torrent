@@ -1,7 +1,7 @@
 #pragma once
 #include <cstdint>
-#include <string>
 #include <limits>
+#include <string>
 
 #define BYTES_ADDR(x) (static_cast<const char*>(static_cast<const void*>(&x)))
 #define BYTES_ADDR_MUT(x) (static_cast<char*>(static_cast<void*>(&x)))
@@ -28,12 +28,14 @@ namespace storrent
 
     struct connect_request : public tracker_request
     {
-        virtual size_t field_count() const noexcept override 
-        { 
-            return 3;
+        connect_request(std::int64_t proto_id, std::int32_t action, std::int32_t tx_id)
+            : protocol_id{proto_id}, action{action}, tx_id{tx_id}
+        {
         }
 
-        virtual size_t field_offset(size_t field_idx) const override 
+        virtual size_t field_count() const noexcept override { return 3; }
+
+        virtual size_t field_offset(size_t field_idx) const override
         {
             switch (field_idx)
             {
@@ -90,4 +92,4 @@ namespace storrent
         started,
         stopped
     };
-}
+} // namespace storrent
